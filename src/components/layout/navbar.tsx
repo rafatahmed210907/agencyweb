@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -11,18 +11,31 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Brand } from "@/components/shared/brand";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { ScrollProgress } from "@/components/fx/scroll-progress";
 
 const HOME_SECTIONS = ["services", "process", "pricing", "faq"];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const lastScroll = useRef(0);
   const pathname = usePathname();
   const isHome = pathname === "/";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      const current = window.scrollY;
+      setScrolled(current > 12);
+      // Hide the bar while scrolling down, reveal it on any upward movement.
+      const delta = current - lastScroll.current;
+      if (Math.abs(delta) > 6) {
+        setHidden(current > 220 && delta > 0);
+        lastScroll.current = current;
+      }
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -56,13 +69,18 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 px-3 pt-3 transition-transform duration-300 ease-out sm:px-5 sm:pt-4",
+        hidden && !open ? "-translate-y-[130%]" : "translate-y-0",
+      )}
+    >
       <nav
         aria-label="Primary"
         className={cn(
-          "mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-2xl border px-3 py-2.5 transition-all duration-300 sm:px-4",
+          "relative mx-auto flex max-w-6xl items-center justify-between gap-3 overflow-hidden rounded-2xl border px-3 py-2.5 transition-[background,border-color,box-shadow] duration-300 sm:px-4",
           scrolled
-            ? "border-border bg-background/78 shadow-[0_18px_50px_-32px_rgba(0,0,0,0.85)] backdrop-blur-xl"
+            ? "border-border bg-background/80 shadow-[0_18px_50px_-32px_rgba(0,0,0,0.85)] backdrop-blur-xl"
             : "border-transparent bg-background/25 backdrop-blur-sm",
         )}
       >
@@ -149,6 +167,7 @@ export function Navbar() {
             </SheetContent>
           </Sheet>
         </div>
+        <ScrollProgress />
       </nav>
     </header>
   );

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Check, Quote } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Container, Section } from "@/components/layout/container";
 import { Reveal, RevealGroup, RevealItem } from "@/components/shared/reveal";
@@ -55,7 +54,6 @@ export default async function CaseStudyPage({
 
   return (
     <>
-      <Navbar />
       <main id="main">
         <article>
           <header className="relative overflow-hidden pb-12 pt-32 sm:pt-36">

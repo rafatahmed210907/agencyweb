@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Aurora, GridBackdrop } from "@/components/fx/atmosphere";
@@ -8,7 +7,6 @@ import { Aurora, GridBackdrop } from "@/components/fx/atmosphere";
 export default function NotFound() {
   return (
     <>
-      <Navbar />
       <main id="main" className="relative flex min-h-[85vh] items-center overflow-hidden">
         <Aurora intensity="subtle" />
         <GridBackdrop />

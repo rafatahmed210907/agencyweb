@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Clock, Mail, MapPin, MessageSquare } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { PageHero } from "@/components/layout/page-hero";
 import { Container, Section } from "@/components/layout/container";
@@ -35,7 +34,6 @@ const DETAILS = [
 export default function ContactPage() {
   return (
     <>
-      <Navbar />
       <main id="main">
         <PageHero
           eyebrow="Contact"

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { PageHero } from "@/components/layout/page-hero";
 import { Container, Section } from "@/components/layout/container";
@@ -24,7 +23,6 @@ export const metadata: Metadata = buildMetadata({
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
       <main id="main">
         <PageHero
           eyebrow="About the studio"
