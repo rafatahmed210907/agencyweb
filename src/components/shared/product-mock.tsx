@@ -47,7 +47,7 @@ export function ProductMock({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "relative isolate overflow-hidden rounded-2xl border border-border bg-card/80 shadow-[0_50px_120px_-50px_rgba(0,0,0,0.9)] backdrop-blur-xl",
+        "relative isolate overflow-hidden rounded-2xl border border-border bg-card shadow-[0_40px_100px_-50px_rgba(0,0,0,0.9)]",
         className,
       )}
     >

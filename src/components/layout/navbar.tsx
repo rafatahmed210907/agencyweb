@@ -80,7 +80,7 @@ export function Navbar() {
         className={cn(
           "relative mx-auto flex max-w-6xl items-center justify-between gap-3 overflow-hidden rounded-2xl border px-3 py-2.5 transition-[background,border-color,box-shadow] duration-300 sm:px-4",
           scrolled
-            ? "border-border bg-background/80 shadow-[0_18px_50px_-32px_rgba(0,0,0,0.85)] backdrop-blur-xl"
+            ? "border-border bg-background/85 shadow-[0_18px_50px_-32px_rgba(0,0,0,0.85)] backdrop-blur-md"
             : "border-transparent bg-background/25 backdrop-blur-sm",
         )}
       >

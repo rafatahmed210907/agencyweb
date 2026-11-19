@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 import { GridBackdrop } from "@/components/fx/atmosphere";
 
 /**
- * Photo frame with a deterministic gradient fallback. If `src` is missing or
- * the image fails to load, the composition still holds its layout with a
- * generated mesh + label instead of an empty box.
+ * Photo frame with a deterministic gradient fallback. Images are lazy by
+ * default, rendered at a single quality tier, and capped to the width they are
+ * actually displayed at so phones never download a desktop-sized cover.
  */
 export function MediaFrame({
   src,
@@ -40,8 +40,9 @@ export function MediaFrame({
           alt={alt}
           fill
           priority={priority}
+          loading={priority ? undefined : "lazy"}
           sizes={sizes}
-          quality={85}
+          quality={70}
           className="object-cover transition-transform duration-700 ease-out group-hover/media:scale-[1.04]"
         />
       ) : (

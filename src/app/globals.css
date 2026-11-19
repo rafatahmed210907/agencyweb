@@ -442,6 +442,19 @@
 }
 
 /* ------------------------------------------------------------------ *
+ * Small screens: drop continuous ambient animation. Large moving
+ * gradient layers are the main cause of slow first paint on phones.
+ * ------------------------------------------------------------------ */
+
+@media (max-width: 767px) {
+  .animate-aurora,
+  .animate-float,
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
  * Reduced motion
  * ------------------------------------------------------------------ */
 

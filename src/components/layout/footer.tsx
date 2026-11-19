@@ -14,7 +14,7 @@ export function Footer() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-32 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent)] opacity-70 blur-2xl"
+        className="pointer-events-none absolute -bottom-32 left-1/2 hidden h-72 w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent)] opacity-70 sm:block"
       />
 
       <Container className="relative pb-10 pt-16 sm:pt-20">

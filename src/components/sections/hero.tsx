@@ -109,7 +109,7 @@ export function Hero() {
         >
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-10 -top-8 h-40 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent)] blur-2xl"
+            className="pointer-events-none absolute inset-x-10 -top-8 hidden h-40 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent)] sm:block"
           />
           <ProductMock className="relative" />
 

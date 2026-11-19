@@ -3,7 +3,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Infinite marquee. The track is duplicated and marked aria-hidden so screen
- * readers only announce the content once. Stops on hover.
+ * readers only announce the content once. Stops on hover, and stops entirely
+ * below 768px (see `.marquee-track` in globals.css).
  */
 export function Marquee({
   children,
@@ -22,7 +23,7 @@ export function Marquee({
     <div className={cn("mask-fade-x group/marquee relative overflow-hidden", className)}>
       <div
         className={cn(
-          "flex w-max items-center gap-12 will-change-transform",
+          "marquee-track flex w-max items-center gap-12 will-change-transform",
           pauseOnHover && "group-hover/marquee:[animation-play-state:paused]",
         )}
         style={{
