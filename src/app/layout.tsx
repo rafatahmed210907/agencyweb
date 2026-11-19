@@ -4,6 +4,7 @@ import { ThemeProvider, GsapProvider } from "@/components/providers/theme-provid
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { NoiseOverlay } from "@/components/fx/atmosphere";
+import { Navbar } from "@/components/layout/navbar";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -80,6 +81,7 @@ export default function RootLayout({
               >
                 Skip to content
               </a>
+              <Navbar />
               {children}
               <NoiseOverlay />
               <Toaster />

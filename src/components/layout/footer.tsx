@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Brand } from "@/components/shared/brand";
+import { Button } from "@/components/ui/button";
 import { footerNav, site } from "@/content/site";
 
 export function Footer() {
@@ -9,86 +10,96 @@ export function Footer() {
     <footer className="relative overflow-hidden border-t border-border">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -top-40 h-72 bg-[radial-gradient(60%_100%_at_50%_100%,var(--glow),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-32 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow),transparent)] opacity-70 blur-2xl"
       />
 
-      <Container className="relative py-16 sm:py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
-          <div className="max-w-sm">
-            <Brand markSize={32} textClassName="text-lg" />
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+      <Container className="relative pb-10 pt-16 sm:pt-20">
+        <div className="grid gap-12 lg:grid-cols-[1.25fr_1.75fr] lg:gap-16">
+          <div>
+            <Brand markSize={30} textClassName="text-[17px]" />
+            <p className="mt-4 max-w-xs text-[13.5px] leading-relaxed text-muted-foreground">
               A senior software studio building product interfaces and web platforms for teams that
               care about craft.
             </p>
 
-            <a
-              href={`mailto:${site.email}`}
-              className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary"
-            >
-              {site.email}
-              <ArrowUpRight className="size-3.5" />
-            </a>
+            <div className="mt-6 flex flex-wrap items-center gap-2.5">
+              <Button asChild size="sm" variant="glow">
+                <Link href="/contact">
+                  Start a project
+                  <ArrowUpRight className="size-3.5" />
+                </Link>
+              </Button>
+              <a
+                href={`mailto:${site.email}`}
+                className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border px-3 text-[13px] text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+              >
+                {site.email}
+              </a>
+            </div>
 
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/8 px-3 py-1.5">
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-emerald-500/[0.08] px-3 py-1.5">
               <span className="size-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
-              <span className="text-xs text-emerald-600 dark:text-emerald-400">
+              <span className="text-[11.5px] text-emerald-600 dark:text-emerald-400">
                 {site.availability}
               </span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3">
             {footerNav.map((group) => (
               <div key={group.title}>
-                <h3 className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                <h2 className="font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-muted-foreground/80">
                   {group.title}
-                </h3>
+                </h2>
                 <ul className="mt-4 space-y-2.5">
                   {group.links.map((link) => (
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                        className="group inline-flex items-center text-[13.5px] text-muted-foreground transition-colors hover:text-foreground"
                       >
                         {link.label}
+                        <ArrowUpRight className="ml-1 size-3 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-60" />
                       </Link>
                     </li>
                   ))}
                 </ul>
               </div>
             ))}
-          </div>
+          </nav>
         </div>
 
-        <div className="mt-14 flex flex-col gap-6 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-muted-foreground">
+        <div className="mt-14 flex flex-col gap-5 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[11.5px] text-muted-foreground">
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
             {site.socials.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {social.label}
-              </a>
+              <li key={social.label}>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-[11.5px] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {social.label}
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
 
-        <p className="mt-6 max-w-2xl text-[11px] leading-relaxed text-muted-foreground/70">
+        <p className="mt-5 max-w-2xl text-[10.5px] leading-relaxed text-muted-foreground/60">
           {site.disclaimer}
         </p>
       </Container>
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none relative -mb-8 select-none overflow-hidden px-4 text-center"
-      >
-        <span className="block bg-[linear-gradient(to_bottom,color-mix(in_oklab,var(--foreground)_14%,transparent),transparent)] bg-clip-text text-[clamp(3.5rem,15vw,11rem)] font-semibold leading-[0.8] tracking-[-0.05em] text-transparent">
+      <div aria-hidden="true" className="relative select-none overflow-hidden">
+        <span className="block translate-y-[0.16em] bg-gradient-to-b from-foreground/[0.11] to-transparent bg-clip-text text-center text-[clamp(3.75rem,17vw,12rem)] font-semibold leading-[0.78] tracking-[-0.06em] text-transparent">
           Northlane
         </span>
       </div>
