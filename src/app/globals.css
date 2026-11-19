@@ -123,13 +123,17 @@
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
     background: var(--background);
+    /* Safety net: a single wide decorative layer must never shift the layout.
+       `clip` (not `hidden`) keeps position: sticky working. */
+    overflow-x: clip;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     letter-spacing: -0.018em;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    overflow-x: clip;
+    max-width: 100vw;
   }
 
   h1,
