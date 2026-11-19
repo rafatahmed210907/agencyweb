@@ -56,22 +56,22 @@ export default function ContactPage() {
                     {DETAILS.map((detail) => (
                       <div
                         key={detail.label}
-                        className="flex items-start justify-between gap-6 border-b border-border py-4 last:border-b-0"
+                        className="flex items-start justify-between gap-6 border-b border-[rgba(166,240,76,0.1)] py-4 last:border-b-0"
                       >
-                        <span className="flex items-center gap-2.5 text-[13px] text-muted-foreground">
-                          <detail.icon className="size-4 text-primary/70" />
+                        <span className="flex items-center gap-2.5 text-[13px] text-[#9aa79a]">
+                          <detail.icon className="size-4 text-[#a6f04c]/70" />
                           {detail.label}
                         </span>
                         {detail.href ? (
                           <a
                             href={detail.href}
-                            className="inline-flex items-center gap-1 text-right text-[13px] font-medium text-foreground transition-colors hover:text-primary"
+                            className="inline-flex items-center gap-1 text-right text-[13px] font-medium text-[#f2f5ef] transition-colors hover:text-[#a6f04c]"
                           >
                             {detail.value}
                             <ArrowUpRight className="size-3" />
                           </a>
                         ) : (
-                          <span className="text-right text-[13px] text-foreground">{detail.value}</span>
+                          <span className="text-right text-[13px] text-[#f2f5ef]">{detail.value}</span>
                         )}
                       </div>
                     ))}
@@ -80,7 +80,7 @@ export default function ContactPage() {
 
                 <Reveal delay={0.08}>
                   <div>
-                    <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6b776b]">
                       Before you write
                     </h2>
                     <Accordion type="single" collapsible className="mt-4 space-y-2">
@@ -95,15 +95,15 @@ export default function ContactPage() {
                 </Reveal>
 
                 <Reveal delay={0.14}>
-                  <div className="rounded-2xl border border-border bg-card/45 p-5">
-                    <p className="text-[13px] leading-relaxed text-muted-foreground">
-                      This demo build accepts submissions through a local API route and does not
-                      deliver email yet. The form validates, stores nothing personal, and reports
-                      success exactly as it would in production.
+                  <div className="rounded-2xl border border-[rgba(166,240,76,0.14)] bg-[rgba(10,14,10,0.6)] p-5">
+                    <p className="text-[13px] leading-relaxed text-[#9aa79a]">
+                      This build accepts submissions through a local API route and does not deliver
+                      email yet. The form validates, stores nothing personal, and reports success
+                      exactly as it would in production.
                     </p>
                     <Link
                       href="/about"
-                      className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-primary hover:underline"
+                      className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-[#a6f04c] hover:underline"
                     >
                       More about the studio
                       <ArrowUpRight className="size-3.5" />
@@ -115,7 +115,7 @@ export default function ContactPage() {
               <Reveal delay={0.1} direction="left">
                 <Suspense
                   fallback={
-                    <div className="h-[34rem] animate-pulse rounded-2xl border border-border bg-card/40" />
+                    <div className="h-[34rem] animate-pulse rounded-2xl border border-[rgba(166,240,76,0.14)] bg-[rgba(10,14,10,0.6)]" />
                   }
                 >
                   <ContactForm />

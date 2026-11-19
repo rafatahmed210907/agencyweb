@@ -1,6 +1,6 @@
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
-import { LogoCloud } from "@/components/sections/logo-cloud";
+import { TrustBar } from "@/components/sections/logo-cloud";
 import { Services } from "@/components/sections/services";
 import { FeaturedWork } from "@/components/sections/featured-work";
 import { Process } from "@/components/sections/process";
@@ -16,7 +16,7 @@ export default function HomePage() {
     <>
       <main id="main">
         <Hero />
-        <LogoCloud />
+        <TrustBar />
         <Services />
         <FeaturedWork />
         <Process />

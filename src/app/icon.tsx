@@ -13,22 +13,22 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#141018",
+          background: "#050706",
         }}
       >
         <div
           style={{
-            width: 24,
-            height: 24,
-            borderRadius: 7,
-            border: "1.5px solid #a78bfa",
-            background: "rgba(139,92,246,0.18)",
+            width: 26,
+            height: 26,
+            borderRadius: 8,
+            border: "1.5px solid #a6f04c",
+            background: "rgba(166,240,76,0.14)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#ddd6fe",
-            fontSize: 13,
-            fontWeight: 600,
+            color: "#c6f98a",
+            fontSize: 14,
+            fontWeight: 700,
           }}
         >
           N

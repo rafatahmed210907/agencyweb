@@ -1,319 +1,331 @@
-# Northlane — Software Studio Website (Frontend Build Plan)
+# Northlane — Dark Lime Redesign (Plan v2)
 
 ## Goal
 
-Build a production-quality, fully static, Vercel-ready marketing site for a fictional software studio, **Northlane**, in `D:\work\agencyweb`. Dark-first (violet/indigo) with a working light theme, heavy but tasteful motion, code-owned UI-kit effect components, and a typed content layer so it can become dynamic (CMS/backend/auth) later without rewriting sections.
+Rebuild the existing Northlane site in `D:\work\agencyweb` as a **dark-only, lime-accented** studio site modelled on the Project CPP / recreate-v3 web UI (`C:\Users\Admin\Downloads\cpp\cpp-frontend`), replacing the current violet/indigo + light-theme system. Every card, panel, and section is redesigned from scratch around one shared surface grammar. Service offering is reframed as **three pillars**: Project Planning → Project Establishment, Design · Development · Maintenance, and Marketing.
 
-The result must be clearly more polished than the Project CPP reference site in `C:\Users\Admin\Downloads\cpp\cpp-frontend` while borrowing its good parts (floating pill navbar, spotlight + grid atmosphere, glow cards, glass panels, scroll reveals).
+Existing infrastructure (Next 16 App Router, Tailwind v4, shadcn primitives, typed content layer, Motion + GSAP, contact API) is kept. Only the design system, card components, and content are replaced.
 
 ## Locked decisions
 
 | Topic | Decision |
 | --- | --- |
-| Site type | Software agency / studio (not the FiveM storefront) |
-| Pages | Home, About, Work index, Work case study (`/work/[slug]`), Contact, 404 |
-| Brand | **Northlane** — "Software studio for ambitious products." |
-| Content | Fictional but credible, all in `src/content/*`, no fake client logos or awards |
-| Visual | Dark-first near-black + violet/indigo + cyan accent; light theme toggle |
-| Foundation | Next.js 16 (App Router, `src/`), TypeScript strict, Tailwind CSS v4 |
-| UI base | shadcn/ui (Radix + CVA) in `components/ui/*`, vendored effects in `components/fx/*` |
-| Animation | `motion` for interaction/layout; `gsap` + ScrollTrigger for scroll-scrubbed timelines; CSS keyframes for ambient loops |
-| Fonts | Geist + Geist Mono via `next/font/google` |
-| Media | Hotlinked Unsplash photos via `images.remotePatterns`, wrapped in a fallback-safe `MediaFrame` |
-| Contact | Preview-only: `POST /api/contact` with zod validation + swappable transport, no external provider |
-| Auth | **None.** No login/dashboard routes |
-| 3D | None. CSS/SVG only |
-| Package manager | npm |
-| Deploy | Not now. Must build cleanly for Vercel |
-| Finish | Run `npm run dev` and report the live URL |
+| Theme | **Dark only.** Light theme, `next-themes`, `ThemeProvider`, `ThemeToggle`, `@custom-variant dark`, and every `dark:` class are deleted |
+| Palette | Near-black `#050706` canvas, lime `#A6F04C` accent, toxic `#39FF14`, soft `#C6F98A` |
+| Fonts | **Sora** (headings) + **Figtree** (body) via `next/font/google`; Geist Mono → Sora-mono fallback for eyebrows only if needed |
+| Brand | Name and diamond mark kept; mark recoloured lime |
+| Routes | Unchanged: `/`, `/work`, `/work/[slug]`, `/about`, `/contact`, 404, `api/contact`, sitemap, robots, OG image |
+| Services | 3 pillars, each with sub-steps (see content model) |
+| Copy | Rewritten around the three pillars; all 6 case studies re-themed to pillars |
+| Imagery | **No photos.** All covers/galleries are code-generated compositions; Unsplash config and `remotePatterns` removed |
+| Light | Scroll-linked sunlight cone on the hero (Motion `useScroll`); static cone on inner page heroes |
+| Navbar | 7 links (Home · Services · Work · Process · Pricing · FAQ · About) + lime pill CTA |
+| Cards | One shared base primitive + 5 section signature layers (below) |
+| Logo cloud | Code-drawn SVG wordmarks |
+| Marketing data | Invented metrics are allowed; the fictional-content footer disclaimer is **removed** |
+| Home order | Hero → Logos → Pillars → Featured work → Process → Tooling → Stats rack → Testimonials → Pricing → FAQ → Final CTA |
+| Motion | Motion for interaction; GSAP ScrollTrigger only for the Process timeline; CSS keyframes for ambient loops |
+| Performance | Retain current mobile guards: tiled noise (no live turbulence), no `filter: blur()` on large layers, no marquee/animation below 768px, no remote images |
 
 ## Out of scope
 
-Login/signup, dashboard, database, real email delivery, CMS, analytics keys, blog, i18n, WebGL, payment checkout, real client assets. Also no fabricated real-person team photos/names — team entries are clearly fictional.
+Auth/login, dashboard, database, real email delivery, CMS, blog, i18n, WebGL, payments, real client assets.
 
 ---
 
-## Target structure
+## 1. Design tokens — rewrite `src/app/globals.css`
+
+Replace the entire `:root` / `.dark` / `@theme inline` token block with a single dark set.
 
 ```
-agencyweb/
-├─ components.json                 shadcn config (new-york, cssVariables, rsc)
-├─ next.config.ts                  images.remotePatterns, headers, poweredByHeader:false
-├─ postcss.config.mjs              @tailwindcss/postcss
-├─ eslint.config.mjs
-├─ tsconfig.json                   strict, "@/*" -> "./src/*"
-├─ README.md
-├─ public/
-│  ├─ brand/{mark.svg,logo.svg,og.svg}
-│  └─ patterns/noise.svg
-└─ src/
-   ├─ app/
-   │  ├─ layout.tsx                fonts, ThemeProvider, TooltipProvider, Toaster, skip-link
-   │  ├─ template.tsx              page-transition fade/blur
-   │  ├─ globals.css               tokens, dark variant, scrollbar, utilities, keyframes
-   │  ├─ page.tsx                  Home
-   │  ├─ about/page.tsx
-   │  ├─ work/page.tsx
-   │  ├─ work/[slug]/page.tsx      generateStaticParams + generateMetadata
-   │  ├─ contact/page.tsx
-   │  ├─ api/contact/route.ts
-   │  ├─ not-found.tsx
-   │  ├─ sitemap.ts
-   │  ├─ robots.ts
-   │  └─ opengraph-image.tsx
-   ├─ components/
-   │  ├─ ui/          shadcn primitives (see list)
-   │  ├─ fx/          owned effect components (see list)
-   │  ├─ layout/      navbar, mobile-nav, footer, theme-toggle, section, page-hero
-   │  ├─ sections/    home/about/work/contact sections
-   │  ├─ shared/      brand, reveal, media-frame, section-heading, eyebrow, stat
-   │  └─ providers/   theme-provider, smooth-scroll-provider (ScrollTrigger sync)
-   ├─ content/        site, services, work, process, stack, stats, testimonials, pricing, faq, media
-   └─ lib/            utils, motion, seo, contact/{schema,transport}, hooks
+--background        #050706
+--background-1      #080B08
+--background-2      #0B0F0B
+--card              #0A0E0A   (82% alpha fill used in panels)
+--card-foreground   #F2F5EF
+--popover           #0B0F0B
+--primary           #A6F04C
+--primary-foreground#08120A
+--secondary         rgba(255,255,255,0.05)
+--muted             #0B0F0B
+--muted-foreground  #9AA79A
+--accent            rgba(166,240,76,0.08)
+--accent-foreground #F2F5EF
+--border            rgba(166,240,76,0.10)
+--border-strong     rgba(166,240,76,0.28)
+--input             rgba(255,255,255,0.10)
+--ring              #A6F04C
+--destructive       #F2555A
+--warning           #F5B53D
+--success           #A6F04C
+--lime              #A6F04C
+--lime-soft         #C6F98A
+--lime-dim          #7FBF3A
+--toxic             #39FF14
+--grid-line         rgba(166,240,76,0.055)
+--glow              rgba(166,240,76,0.30)
+--noise-opacity     0.045
 ```
 
----
+Keep shadcn's variable names so `components/ui/*` keeps working, but delete the `.dark` block, `color-scheme: light`, and all light values. Add `color-scheme: dark` to `:root`.
 
-## Design system (must be implemented first)
+Remove `--violet`, `--violet-soft`, `--indigo`, `--cyan` from tokens and from `@theme inline`. Add `--color-lime*`, `--color-toxic`, `--color-warning`, `--color-success`.
 
-### Tokens — `src/app/globals.css`
+### Utility rewrites
 
-Use Tailwind v4 `@import "tailwindcss";`, `@custom-variant dark (&:is(.dark *));`, `@theme inline` mapping, and `oklch()` variables in `:root` (light) + `.dark`.
+- `text-gradient` → `linear-gradient(110deg, #C6F98A, #A6F04C 55%, #39FF14)`.
+- `text-gradient-violet` → rename `text-gradient-lime`; update every usage (`page-hero.tsx`, `hero.tsx`, `work/page.tsx`, `work/[slug]/page.tsx`, `final-cta.tsx`, `not-found.tsx`).
+- `grid-bg` → use `--grid-line` at 64px, add `.hero-grid` variant with the reference's radial mask (`110% 80% at 50% 18%`).
+- Scrollbars → 4px width, `rgba(166,240,76,0.35)` thumb, transparent track (reference values).
+- Add `.sunspot` / `.hero-cone` classes (see §3).
+- Add `.nl-surface` classes (see §4).
+- Recolour `pulse-dot` box-shadow to lime.
+- Keep the reduced-motion block and the `max-width: 767px` animation kill switch.
 
-Required semantic vars (shadcn-compatible): `--background --foreground --card --card-foreground --popover* --primary --primary-foreground --secondary* --muted* --accent* --destructive* --border --input --ring`.
+### Fonts — `src/app/layout.tsx`
 
-Add studio-specific vars: `--surface`, `--surface-2`, `--elevated`, `--violet`, `--violet-soft`, `--indigo`, `--cyan`, `--glow`, `--grid-line`, `--noise-opacity`.
+```ts
+const sora = Sora({ variable: "--font-sora", subsets: ["latin"], display: "swap", weight: ["400","500","600","700"] });
+const figtree = Figtree({ variable: "--font-figtree", subsets: ["latin"], display: "swap" });
+```
 
-Dark palette anchor: background ≈ `oklch(0.15 0.02 285)`, card ≈ `oklch(0.19 0.03 285)`, primary violet ≈ `oklch(0.64 0.21 288)`, cyan accent ≈ `oklch(0.78 0.13 205)`. Light palette: lavender-tinted near-white background, same primary chroma reduced. Verify WCAG AA on body text, muted text, and button labels in both themes.
-
-Also define: `--radius` scale, `--ease-out-expo`, `--ease-spring`, durations `--dur-fast/default/slow`, and a `--font-sans/--font-mono` mapping from `next/font` variables.
-
-### Global CSS requirements
-
-- Themed scrollbars: `::-webkit-scrollbar` (8px, transparent track, violet-tinted rounded thumb, brighter on hover) + `scrollbar-color` / `scrollbar-width` for Firefox, different values per theme.
-- `html { scroll-behavior: smooth }` with a `prefers-reduced-motion` override to `auto`.
-- Utilities: `.text-gradient`, `.grid-bg`, `.noise-overlay`, `.glass-panel`, `.glow-ring`, `.mask-fade-x`, `.mask-fade-b`, `.balance` (text-wrap balance on headings).
-- Global focus-visible ring using `--ring`, skip-link styles.
-- Keyframes: `aurora-drift`, `float-slow`, `marquee`, `shimmer`, `pulse-dot`, `grid-fade`.
-- One reduced-motion block that neutralizes animations/transitions and disables custom cursor/parallax.
-
-### Typography scale
-
-Geist for UI/body; Geist Mono for eyebrows, metrics, tags, and code chips. Hero H1 `clamp(2.6rem, 6vw, 5.2rem)` with tight tracking and `text-wrap: balance`. Section H2 `clamp(2rem, 3.6vw, 3.1rem)`. Body 15–17px, muted color, max 68ch. Establish an `Eyebrow` component (mono, uppercase, tracked, violet, with a leading dot/line).
+`--font-sans: var(--font-figtree)`, `--font-heading: var(--font-sora)`. Set `h1–h6` to `font-heading` with `letter-spacing: -0.028em`. Body keeps `-0.018em`.
 
 ---
 
-## Component inventory
+## 2. Remove the light theme (complete deletions)
 
-### `components/ui/*` (shadcn, themed)
+1. `package.json`: drop `next-themes`; run `npm install`.
+2. Delete `src/components/layout/theme-toggle.tsx`.
+3. `src/components/providers/theme-provider.tsx`: remove `ThemeProvider` and the `next-themes` import; keep `GsapProvider` + `useGsapReady`.
+4. `src/app/layout.tsx`: remove `ThemeProvider` wrapper and `suppressHydrationWarning` if unused; set `color-scheme: dark`.
+5. `src/components/ui/sonner.tsx`: remove `useTheme`; hardcode `theme="dark"`.
+6. `src/components/layout/navbar.tsx`: remove `ThemeToggle` from desktop cluster and mobile sheet "Appearance" row.
+7. Grep-verify zero remaining matches for `next-themes`, `useTheme`, `dark:`, `ThemeToggle`.
 
-button, card, accordion, input, textarea, label, badge, dialog, sheet, tabs, tooltip, separator, select, sonner (toast), carousel (embla). Do not vendor anything we don't use.
+---
 
-Extend `button` with variants: `default` (violet gradient), `secondary`, `outline`, `ghost`, `link`, `glow` (gradient + halo + hover lift), sizes `sm|default|lg|icon`.
+## 3. Ambient background — rewrite `src/components/fx/atmosphere.tsx`
 
-### `components/fx/*` (owned, no external kit dependency)
+Replace `Aurora` with lime equivalents and add the sunlight system.
 
-| File | Behavior |
+- **`SunlightCone`** — scroll-linked, client component.
+  - `useScroll({ target: ref, offset: ["start start", "end start"] })` on the hero section.
+  - `useTransform` scrollYProgress → `opacity 0.85→0`, `scaleX 1→1.25`, `blur` via a fixed pre-blurred layer (do **not** animate `filter`; animate opacity/transform only).
+  - Markup: absolutely positioned cone at top-center, `conic-gradient` plus a radial wash, lime at 0.10–0.18 alpha, `mask-image` fading downward. `aria-hidden`, `pointer-events-none`.
+  - Hidden below `md`; render a static cone when `prefers-reduced-motion`.
+- **`Sunspot`** — the static top-of-page wash: two stacked radial gradients at `50% -8%` / `50% -2%` (reference values). Used by page heroes, case-study headers, and the final CTA.
+- **`GridBackdrop`** — recolour to lime grid lines; keep the radial mask and the `size` prop.
+- **`NoiseOverlay`** — keep the tiled 140px data-URI SVG (already perf-safe); bump opacity via `--noise-opacity`; `hidden md:block` retained.
+- Recolour `src/components/fx/scroll-progress.tsx` to `from-lime-soft via-lime to-toxic`.
+- Recolour `src/components/fx/spotlight.tsx` default `glow` to `color-mix(in oklab, var(--lime) 22%, transparent)`.
+
+`Aurora` usages to replace: `hero.tsx`, `page-hero.tsx`, `about/page.tsx`, `work/[slug]/page.tsx`, `not-found.tsx`, `final-cta.tsx`. On inner pages use `<Sunspot /> + <GridBackdrop />`; on the hero use `<SunlightCone /> + <GridBackdrop />`.
+
+---
+
+## 4. Card system — shared base + 5 signature layers
+
+### 4a. `src/components/fx/lime-surface.tsx` (new)
+
+One primitive for fill, border, radius, spotlight, and hover lift.
+
+```tsx
+type Tone = "solid" | "translucent";
+type Edge = "top" | "wide" | "left" | "none";
+
+LimeSurface({
+  tone?, edge?, interactive?, padded?, className?, children
+})
+```
+
+- Renders `div.nl-surface` with `data-tone` / `data-edge`.
+- Tracks pointer into `--mx` / `--my` (reuse the guard from `spotlight.tsx`: skip on touch and reduced motion).
+- `interactive` toggles `.nl-surface-interactive` (hover lift, border to `--border-strong`, spotlight reveal, filament `drop-shadow`).
+
+CSS in `globals.css`:
+
+```css
+.nl-surface { position:relative; isolation:isolate; overflow:hidden; border-radius:16px;
+  border:1px solid var(--border); background:rgba(10,14,10,0.82);
+  box-shadow:0 22px 44px -26px rgba(0,0,0,0.8); }
+.nl-surface[data-tone="translucent"] { background:rgba(10,14,10,0.55); backdrop-filter:blur(10px); }
+.nl-surface::before { /* 2px top filament: transparent → lime → transparent, left/right 14% */ }
+.nl-surface[data-edge="wide"]::before { left:6%; right:6%; }
+.nl-surface[data-edge="left"]::before { /* vertical variant */ }
+.nl-surface[data-edge="none"]::before { content:none; }
+.nl-surface::after { /* radial 240px spotlight at var(--mx) var(--my), opacity 0 → 1 in interactive */ }
+.nl-surface-interactive:hover { transform:translateY(-4px); border-color:var(--border-strong);
+  box-shadow:0 18px 40px -20px rgba(166,240,76,0.35); }
+```
+
+- Keep `backdrop-filter: blur(10px)` only on `translucent`, and only above `md` (media query) to protect mobile paint cost.
+- Respect reduced motion: no transform/transition.
+
+### 4b. Signature layers
+
+1. **`PillarCard`** (`components/sections/pillars.tsx`) — `LimeSurface edge="top" interactive`, large `01/02/03` mono index in lime-dim, icon chip (lime 8% bg, lime border), title (Sora 18px), summary, then a **sub-step list** where each item has a lime dot on a vertical hairline connector. Three cards: first two span 1 col each, third spans full width on `lg` (asymmetric grid: `lg:grid-cols-2` + third `lg:col-span-2` split into two text columns).
+2. **`WorkCard`** — `LimeSurface edge="none"`, top area is `<ArtFrame />` (code-generated cover), bottom is a metric rail of divided cells (`border-t`, each cell `border-l` except first) reusing the stat-rack grammar.
+3. **`StatRack`** — one `LimeSurface` wrapping a divided grid; each cell has its own 2px top filament that brightens on hover and a corner bracket (`::before` L-shaped border). Replaces the current `Stats` section markup.
+4. **`TierCard`** — pricing; non-highlighted = `LimeSurface edge="top"`; highlighted = same base plus an animated conic border implemented as a masked pseudo-element (static when reduced motion).
+5. **`QuoteCard`** — `LimeSurface edge="left"`; lime quote glyph, initials avatar in a lime ring, name/role footer.
+
+---
+
+## 5. Code-generated art — replace photos
+
+1. Delete `src/content/media.ts` and `src/components/shared/media-frame.tsx`.
+2. Add `src/components/shared/art-frame.tsx` exporting `ArtFrame`:
+   - Props: `{ pattern: "mesh" | "grid" | "rings" | "bars" | "arcs" | "cells"; label: string; variant?: number; className?; aspect? }`.
+   - Each pattern is pure CSS/SVG on `--background-1`, layered: base gradient, pattern layer, `GridBackdrop`, lime corner ticks, and an optional inset "mock UI" strip (three bars + a lime line) so covers read as product shots.
+   - Deterministic by `variant`, no randomness, no images, no layout shift.
+3. `src/content/work.ts`: replace `cover: MediaKey` / `gallery: MediaKey[]` with
+   `cover: VisualSpec` and `gallery: VisualSpec[]` where
+   `VisualSpec = { pattern: Pattern; label: string; variant: number }`.
+   Add `pillar: "planning" | "build" | "marketing"` to each case study.
+4. Update consumers: `featured-work.tsx`, `work-grid.tsx`, `work/[slug]/page.tsx`, `about/page.tsx`.
+5. `next.config.ts`: remove `images.remotePatterns`, `formats`, `qualities`, `deviceSizes`, `imageSizes`, `minimumCacheTTL` (keep the security headers). No `next/image` usage should remain — verify with grep.
+
+---
+
+## 6. Content rewrite — `src/content/*`
+
+### `services.ts` → `pillars.ts`
+
+```ts
+export interface SubStep { title: string; body: string }
+export interface Pillar {
+  slug: "planning" | "build" | "marketing";
+  index: "01" | "02" | "03";
+  title: string;
+  tagline: string;
+  summary: string;
+  subSteps: SubStep[];   // 3–4 each
+  outcomes: string[];    // 3 each
+  icon: "compass" | "layers" | "megaphone";
+}
+```
+
+1. **Project Planning → Establishment** — discovery, scope, systems/architecture decisions, environment and launch setup. Sub-steps: Discovery, Scope & roadmap, Architecture, Launch setup.
+2. **Design · Development · Maintenance** — one lifecycle shown as three linked stages. Sub-steps: Design direction, Build, QA & hardening, Maintenance retainer.
+3. **Marketing** — positioning, launch, and lifecycle campaigns. Sub-steps: Positioning, Launch, Content engine, Measurement.
+
+### Other content files
+
+- `site.ts`: update tagline/description to the pillar framing; nav becomes 7 items; keep `availability`, `email`, `socials`; **delete `disclaimer`**.
+- `work.ts`: 6 studies re-themed — 2 planning/establishment, 2 design-dev-maintenance, 2 marketing. Each gets `pillar`, new title/summary/challenge/approach/highlights, and 3 metrics (marketing studies may state growth metrics per the locked decision).
+- `process.ts`: keep 4 steps, rename to match the pillars (Frame → Establish → Build → Grow).
+- `stack.ts`: keep, retitle the section "Tooling".
+- `stats.ts`, `testimonials.ts`, `pricing.ts`, `faq.ts`, `studio.ts`: keep shapes; adjust wording to pillars; `pricing` tiers become **Establish / Build / Growth**; `studio.ts` `accent` values must switch from violet/cyan/indigo to lime variants (`from-lime/25 to-lime/5`, etc.).
+- `footerNav`: keep 3 groups, retitle Services group to the pillars.
+
+---
+
+## 7. Navigation, hero, and shell
+
+### `components/layout/navbar.tsx`
+
+- Links: Home (`/#discover`), Services (`/#services`), Work (`/work`), Process (`/#process`), Pricing (`/#pricing`), FAQ (`/#faq`), About (`/about`).
+- `HOME_SECTIONS` observer list must include `discover`, `services`, `process`, `pricing`, `faq`.
+- Right cluster: `Start a project` lime pill with a circular dark arrow badge (`group-hover:rotate-45`), matching the reference CTA.
+- Keep scroll-scrolled blur state, hide-on-scroll-down behaviour, and `ScrollProgress`.
+- Pill styling: `border-[rgba(166,240,76,0.10)]` idle, `border-[rgba(166,240,76,0.16)] bg-[#050706]/85 backdrop-blur-xl` scrolled.
+- Mobile sheet: 8 entries, lime active state `bg-[rgba(166,240,76,0.08)]`, lime CTA at the bottom, no theme row.
+- Active nav indicator: replace the violet pill with `bg-[rgba(166,240,76,0.08)]` + `ring-1 ring-[rgba(166,240,76,0.2)]`.
+
+### `components/sections/hero.tsx` — rewrite, centered reference layout
+
+1. Centered status pill: lime dot (`#39FF14`, `status-dot` pulse), "All systems operational"-style label from `site.availability`.
+2. `h1` in three lines: line 1 `#F2F5EF`, lines 2–3 in lime. Sora, `text-[2.6rem] sm:text-6xl lg:text-[4.6rem]`, `tracking-[-0.03em]`, `leading-[1.02]`.
+3. Lede, max-w-xl, `#9AA79A`.
+4. CTAs: lime pill `Start a project` with circular arrow badge + outline pill `See our work`. Keep `Magnetic` on the primary only.
+5. Check row: three uppercase tracked items with lime `✓` (mirrors the reference's STREAM PROOF / CLOUD CONFIGS row).
+6. Product stage: keep `ProductMock`, recolour it (see §8), place it centered below the copy inside the sunlight cone, with a single floating "metric" chip; no blurred halo divs.
+7. Delete `TextReveal` usage and the two-column layout; use one `motion.h1` with staggered `motion.span` lines.
+
+### Shell
+
+- `layout.tsx`: keep `Navbar` in the root layout (already moved there), keep skip link, `GsapProvider`, `TooltipProvider`, `Toaster`, `NoiseOverlay`.
+- `template.tsx`: keep opacity-only transition.
+- `footer.tsx`: restyle to lime — brand, lime CTA, email pill, availability pill in lime (not emerald), 3 nav columns, social row, oversized wordmark with lime-to-transparent gradient mask; remove the disclaimer paragraph and give the bottom bar more breathing room (`pb-12`).
+- `page-hero.tsx`: `Sunspot` + `GridBackdrop`, lime eyebrow with leading rule, `text-gradient-lime` for the second phrase.
+- `brand.tsx`: gradient stops → `--lime-soft`, `--lime`, `--toxic`; diamond fill `color-mix(in oklab, var(--lime) 14%, transparent)`; stroke opacity 0.5.
+- `section-heading.tsx`: eyebrow lime with leading 24px rule; optional `align="center"`.
+- `button.tsx`: `glow` variant becomes the lime pill with `shadow-[0_14px_40px_-12px_rgba(166,240,76,0.6)]` and `hover:-translate-y-0.5`; `outline` uses lime borders; `primary-foreground` must be `#08120A`.
+- `badge.tsx`, `accordion.tsx`, `input.tsx`, `textarea.tsx`, `select.tsx`, `dialog.tsx`, `sheet.tsx`: swap violet-derived styles for lime (`primary`, `ring`, `accent`) and replace `emerald` success with `--success` (lime). Keep `amber` only for the mock "Deploying" state.
+
+---
+
+## 8. Section rewrites
+
+| File | Change |
 | --- | --- |
-| `aurora.tsx` | 3–4 blurred animated radial/conic blobs, absolute, masked; prop-tunable intensity |
-| `grid-background.tsx` | CSS grid lines + radial mask, optional perspective fade; no JS |
-| `spotlight.tsx` | Pointer-follow radial highlight on a wrapper via CSS vars; disabled on touch/reduced |
-| `border-beam.tsx` | Animated conic-gradient border via masked pseudo-element |
-| `marquee.tsx` | Duplicated track, direction/speed/pause-on-hover props, edge masks, `aria-hidden` duplicate |
-| `tilt-card.tsx` | 3D pointer tilt with `rotateX/rotateY` springs, resets on leave |
-| `magnetic.tsx` | Wraps CTAs; translates toward pointer within bounds, spring return |
-| `text-reveal.tsx` | Word-by-word blur/fade stagger on view; renders plain text under reduced motion |
-| `count-up.tsx` | rAF counter triggered by IntersectionObserver, respects reduced motion |
-| `scroll-progress.tsx` | Fixed 2px top progress driven by GSAP ScrollTrigger |
-| `noise.tsx` | Fixed SVG feTurbulence overlay, low opacity, `pointer-events-none` |
-| `shimmer-button.tsx` | Wraps Button with passing light sweep |
-| `glow-card.tsx` | Card shell with spotlight + hairline gradient top edge + hover lift |
-| `cursor-glow.tsx` | Pointer-follow soft violet blob; only when `pointer: fine` and motion allowed |
-| `beam-connector.tsx` | SVG path that draws in as the process timeline scrolls |
-
-### `components/shared/*`
-
-`Brand` (SVG mark + wordmark lockup, light/dark safe, links home), `Reveal` (Motion `whileInView`, direction/delay/blur props, reduced-motion fallback), `SectionHeading` (eyebrow + H2 + lede + optional actions), `MediaFrame` (next/image with fixed aspect ratio, gradient fallback if `src` missing or fails, optional overlay + caption), `Stat`.
-
----
-
-## Content model — `src/content/*`
-
-All copy is typed and exported as `const` objects with `satisfies`. No strings hardcoded in sections.
-
-- `site.ts` — name, tagline, description, url, nav items, socials, email, availability, footer copy, fictional-content disclaimer string.
-- `services.ts` — 6 services: `{ slug, title, summary, bullets[3], icon (lucide name), accent }`.
-- `work.ts` — 6 case studies: `{ slug, title, client, year, summary, services[], stack[], cover{src,alt,blur?}, metrics[{label,value}], challenge, approach[], highlights[], gallery[], testimonial? }`. Used by Home featured grid, Work index, and `/work/[slug]`.
-- `process.ts` — 4 steps `{ index, title, description, deliverables[] }`.
-- `stack.ts` — grouped capabilities (Frontend / Backend / Infra / Design).
-- `stats.ts` — 4 metrics `{ value, suffix, label }`.
-- `testimonials.ts` — 4 fictional quotes `{ quote, name, role, company }` + `isFictional: true`.
-- `pricing.ts` — 3 engagement tiers `{ name, price, cadence, summary, features[], cta, highlighted }`.
-- `faq.ts` — 6 Q/A items (also reused on Contact).
-- `media.ts` — single map of all image URLs + alt text + credits, so swapping to local or CMS assets touches one file.
-
-Type the whole content layer with explicit interfaces in the same files and derive page props from it. Pages must import only from `@/content`.
+| `sections/hero.tsx` | Full rewrite per §7 |
+| `sections/logo-cloud.tsx` | Replace text marquee with 8 `ClientLogo` SVGs (geometric lime monograms + wordmark). Keep `Marquee`, edge masks, mobile stop |
+| `sections/services.tsx` → `sections/pillars.tsx` | 3 `PillarCard`s, asymmetric grid, `id="services"` retained |
+| `sections/featured-work.tsx` | `WorkCard` with `ArtFrame`, metric rail, pillar tag; 3 featured |
+| `sections/process.tsx` | Restyle: lime rail + dots, `LimeSurface` per step, GSAP timeline kept |
+| `sections/stack.tsx` | Retitle "Tooling"; chips in lime-bordered mono style |
+| `sections/stats.tsx` | `StatRack` divided grid with per-cell filament + corner brackets |
+| `sections/testimonials.tsx` | `QuoteCard` carousel; keep embla + controls, restyle dots lime |
+| `sections/pricing.tsx` | `TierCard`; highlighted tier gets animated conic border |
+| `sections/faq.tsx` | Accordion inside `LimeSurface edge="none"`; trigger hover text lime |
+| `sections/final-cta.tsx` | `Sunspot` + `LimeSurface edge="wide"` panel, lime CTAs |
+| `sections/work-grid.tsx` | Filter chips in lime; cards use `WorkCard`; keep Motion layout transitions |
+| `sections/contact-form.tsx` | Recolour to lime; success state uses lime instead of emerald |
+| `app/page.tsx` | Reorder per §Locked decisions; import `Pillars` instead of `Services` |
+| `app/about/page.tsx` | `ArtFrame` instead of `MediaFrame`; team accent gradients → lime; values/timeline restyled |
+| `app/work/page.tsx`, `app/work/[slug]/page.tsx` | `ArtFrame`, pillar tags, lime metrics rack |
+| `app/not-found.tsx` | Lime 404 with `text-gradient-lime` |
+| `app/icon.tsx`, `app/opengraph-image.tsx` | Rebuild on the lime/black palette |
+| `shared/product-mock.tsx` | Swap violet for lime; remove `backdrop-blur-xl`; sidebar/active states lime; keep the chart/code mock |
 
 ---
 
-## Page specifications
+## 9. Ordered task list
 
-### Global shell
-
-- **Navbar**: floating pill, max-w-6xl, sticky top with `pt-3`; on scroll adds blur + stronger border + shadow. Left: brand. Center: Work / Services / Process / Pricing / About. Right: theme toggle (icon button) + `Start a project` glow CTA. Active-section highlighting via `IntersectionObserver` on the Home anchors. Client component.
-- **Mobile nav**: shadcn `Sheet` from the left, large tap targets, brand header, links, CTA, closes on route change; lock body scroll while open.
-- **Theme toggle**: `next-themes`, `attribute="class"`, `defaultTheme="dark"`, `enableSystem` off (dark default, user choice persisted), animated sun/moon crossfade via Motion. `suppressHydrationWarning` on `<html>`.
-- **Footer**: oversized Northlane wordmark with gradient mask, 4 link columns, socials, availability pill, newsletter-style email capture that opens `mailto:` (not a fake API), back-to-top button, fine print + "Case studies and testimonials are fictional sample content." disclaimer.
-- **Page transition**: `app/template.tsx` with Motion opacity+blur+small y; instant under reduced motion.
-
-### Home (`src/app/page.tsx`)
-
-1. **Hero** — aurora + grid + noise + spotlight; availability pill; H1 with gradient accent phrase; lede; `Start a project` (glow, magnetic) + `View our work` (outline); 3 inline trust stats; product mock stage: code-built browser/editor frame containing a mock dashboard (sidebar, chart bars, code pane, violet glow halo, floating micro-cards), subtle float + scroll parallax via GSAP; scroll-cue line.
-2. **Logo cloud** — "Trusted by product teams" + infinite marquee of 8 code-drawn fictional wordmarks (SVG text), edge masks, pause on hover.
-3. **Services** — bento grid (2 large + 4 standard), each `GlowCard` with spotlight, lucide icon chip, title, summary, 3 bullets, hover `ArrowUpRight`.
-4. **Featured work** — 3 case studies, tall `MediaFrame` covers with `TiltCard`, meta row (year · services), metric chips, link to `/work/[slug]`; "All case studies" secondary link.
-5. **Process** — GSAP ScrollTrigger pinned timeline: vertical/horizontal rail with `beam-connector` drawing progress, 4 steps revealing sequentially, sticky step index. Must degrade to a simple stacked list under reduced motion or `< lg`.
-6. **Stack** — grouped chip clusters with hover glow, mono labels; optional slow marquee row of technologies.
-7. **Stats** — 4 `count-up` metrics in a hairline-divided rack.
-8. **Testimonials** — shadcn `Carousel` (embla) with 4 quote cards, drag + arrows + dots, keyboard accessible.
-9. **Pricing / engagements** — 3 tiers, middle highlighted with `border-beam` and gradient wash, feature lists, CTA scrolls to Contact with `?plan=`.
-10. **FAQ** — shadcn `Accordion`, single-open, animated height, plus link to full contact page.
-11. **Final CTA** — wide glass panel with aurora, headline, dual CTA, availability note.
-
-### About (`/about`)
-
-Page hero (eyebrow, H1, lede), studio story (two-column with sticky side label), values grid (4), timeline of studio milestones (scroll-reveal), capabilities summary linking to Services, fictional team grid (4 members, initial-based avatars, roles, short bios, `isFictional`), CTA band.
-
-### Work (`/work`)
-
-Page hero + count, client-side filter chips by service (All + each service) using `useState` + Motion layout transitions, responsive grid of all 6 case studies, empty-state guard, CTA band.
-
-### Work detail (`/work/[slug]`)
-
-- `generateStaticParams` from `content/work.ts`; `dynamicParams = false`; `notFound()` for unknown slugs.
-- `generateMetadata` with title/description/openGraph, per-case-study canonical.
-- Layout: breadcrumb → title + summary → meta table (client, year, services, stack) → cover `MediaFrame` → Challenge → Approach (numbered blocks) → Highlights → Metrics rack (`count-up`) → optional testimonial → gallery grid (2-col) → `Next project` card → CTA band.
-
-### Contact (`/contact`)
-
-Two-column: left = heading, availability status pill, email link, response-time note, socials, 3-item mini FAQ (`Accordion`); right = form card.
-
-Form fields: name, email, company (optional), budget (`Select`), project details (`Textarea`), consent checkbox, hidden honeypot. Client validation with inline errors (`aria-invalid`, `aria-describedby`), pending state, success state replacing the form (`role="status"`), error state with retry. `plan` query param prefills a hidden subject.
-
-### 404
-
-Centered, grid + aurora, oversized `404`, short copy, `Back home` + `See our work`.
-
-### API — `/api/contact`
-
-`route.ts`: `zod` schema (email format, length caps, honeypot must be empty), best-effort in-memory IP rate limit (5/min), returns `{ ok, id }`; validation failures `400` with field errors; never leaks internals. `lib/contact/transport.ts` defines `ContactTransport { send(payload): Promise<void> }`, default `logTransport` (console + accepted), documented single-file swap point for Resend/Supabase/webhook. No env vars required.
+1. **Tokens + fonts.** Rewrite `globals.css` token block and utilities; swap fonts in `layout.tsx`. Verify the site renders dark with lime accents before touching components.
+2. **Delete light theme** (§2) and confirm `npm run build` passes with no `next-themes` references.
+3. **Atmosphere.** Rewrite `atmosphere.tsx` (`Sunspot`, `SunlightCone`, `GridBackdrop`, `NoiseOverlay`); recolour `scroll-progress.tsx`, `spotlight.tsx`.
+4. **Surface primitive.** Add `lime-surface.tsx` + `.nl-surface` CSS.
+5. **Art system.** Add `art-frame.tsx`; delete `media.ts` + `media-frame.tsx`; update `work.ts` types.
+6. **Content.** Write `pillars.ts`; rewrite `work.ts`, `site.ts`, `process.ts`, `pricing.ts`, `faq.ts`, `studio.ts`, `stats.ts`, `testimonials.ts`; drop the disclaimer.
+7. **Shell.** Navbar (7 links + lime CTA), footer, brand mark, page hero, button variants, UI primitives recolour.
+8. **Home sections** in plan order (hero first, then logos → pillars → work → process → tooling → stats → testimonials → pricing → FAQ → CTA).
+9. **Work index + case-study pages**, then **About**, then **Contact**.
+10. **Metadata + art:** `icon.tsx`, `opengraph-image.tsx`, `sitemap.ts`, `robots.ts` already exist — recolour only.
+11. **Sweep + validate** (§10).
 
 ---
 
-## Motion choreography rules
+## 10. Validation
 
-- Shared variants/easings in `lib/motion.ts` (`fadeUp`, `fadeBlur`, `stagger`, `EASE_OUT_EXPO`, spring presets). No inline magic numbers scattered across files.
-- Every scroll animation uses `viewport={{ once: true, margin: "-80px" }}` unless intentionally repeating.
-- Animate only `transform`, `opacity`, `filter`. No animating `width/height/top/left` except accordion height (Motion handles it).
-- GSAP: register plugins inside a client-only provider (`gsap.registerPlugin(ScrollTrigger, useGSAP)`), use `useGSAP` for cleanup, and call `ScrollTrigger.refresh()` after fonts/images settle; disable all GSAP timelines when `prefers-reduced-motion` matches.
-- Do not nest pinning inside pinned sections; one pinned sequence on Home (Process) max.
-- Custom cursor glow, tilt, magnetic, spotlight: all gated on `(pointer: fine)` and motion permission; SSR-safe (no `window` at module scope).
-- Respect a single source of truth for reduced motion: `usePrefersReducedMotion` hook (useSyncExternalStore) + CSS media query.
-
----
-
-## Image strategy
-
-- `next.config.ts`: `images.remotePatterns` for `https://images.unsplash.com/**`; `formats: ["image/avif","image/webp"]`; add `qualities: [70, 85]` allowlist entry for Next 16.
-- All photos referenced only from `content/media.ts` with `{ src, alt, credit }`.
-- Implementer picks 8–10 dark/tech/abstract Unsplash photos, confirms each URL returns 200 (HEAD request), and records the exact URL. If a URL fails, swap it — never ship a broken image.
-- `MediaFrame` handles: missing `src` → deterministic gradient+grid composition with the item title; load failure → same fallback via `onError` (keeps layout stable).
-- Hero/product mock, logo cloud marks, brand logo, and OG image are all code/SVG — no photography dependency for the first viewport.
-- `sizes` set correctly; `priority` only on the Home hero visual; everything else lazy.
-
----
-
-## Accessibility & quality bar
-
-- Semantic landmarks (`header/nav/main/footer/section` with `aria-labelledby`), single `h1` per page, logical heading order.
-- Visible focus rings everywhere; all icon-only buttons have `aria-label`; theme toggle exposes state.
-- Accordion/Carousel/Sheet/Dialog use Radix semantics (keyboard, escape, focus trap) — don't reimplement.
-- Decorative layers `aria-hidden` + `pointer-events-none`.
-- Contrast AA in both themes, including muted text and violet-on-dark CTA labels.
-- No horizontal overflow at 360px; test 360/768/1024/1440.
-- Images have meaningful `alt` or empty `alt` when decorative.
-
-## Performance bar
-
-- No page should ship three.js or a video. Keep first-load JS lean; import heavy client sections with `next/dynamic` only where it helps (e.g. Process GSAP section, Carousel).
-- Prefer server components for static sections; isolate `"use client"` to interactive leaves (Navbar, theme toggle, filters, form, animated widgets).
-- Target Lighthouse (mobile) ≥ 90 Performance / ≥ 95 Accessibility / 100 Best Practices / ≥ 90 SEO on Home.
-
----
-
-## Implementation order
-
-1. **Scaffold** — `npx create-next-app@latest . --ts --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm` in `D:\work\agencyweb` (the existing `.git` is tolerated; if it refuses, scaffold in a temp dir and move files in). Clear boilerplate, set metadata baseline, `.gitignore`, verify `npm run dev` boots.
-2. **shadcn init** — `npx shadcn@latest init` (new-york, cssVariables, base slate) then add: button card accordion input textarea label badge dialog sheet tabs tooltip separator select sonner carousel. Confirm Tailwind v4 wiring (`tw-animate-css`).
-3. **Design tokens + globals.css** — full light/dark oklch sets, dark variant, scrollbars, utilities, keyframes, reduced-motion block, fonts in `layout.tsx`. Verify theme toggle works before building sections.
-4. **Primitives & fx layer** — `lib/utils.ts`, `lib/motion.ts`, `usePrefersReducedMotion`, `useMediaQuery`, then all `components/fx/*` and `components/shared/*`. Build a throwaway `/styleguide` page? **No** — instead validate each fx component inline as it's first used to avoid shipping dead routes.
-5. **Content layer** — all `content/*` files with types, 6 services, 6 case studies, 4 steps, 4 testimonials, 3 tiers, 6 FAQs, 4 stats, media map.
-6. **Shell** — Brand, Navbar (+mobile sheet), ThemeToggle, Footer, `template.tsx` transition, Toaster, TooltipProvider.
-7. **Home sections** in order: hero → logo cloud → services → featured work → process (GSAP) → stack → stats → testimonials → pricing → FAQ → CTA.
-8. **Work** — index with filters, then `[slug]` with `generateStaticParams`/`generateMetadata`.
-9. **About** and **Contact** pages; Contact form + `/api/contact` + zod + transport.
-10. **SEO & metadata** — `metadataBase`, per-route `generateMetadata`, OG image route, `sitemap.ts`, `robots.ts`, `not-found.tsx`, canonical URLs from `site.url`.
-11. **Responsive + polish pass** — 360/768/1024/1440 sweep, fix overflow, spacing rhythm, hover states, focus states, light-theme contrast, reduced-motion pass, mobile GSAP fallbacks.
-12. **README.md** — see outline below.
-13. **Validate** — see validation list. Fix everything before step 14.
-14. **Run live** — `npm run dev` in `D:\work\agencyweb`, keep it running, report `http://localhost:3000`.
-
----
-
-## README outline (must be genuinely useful)
-
-Title + one-line pitch + status badge row (Next.js, TypeScript, Tailwind, license) · Preview/screenshot placeholder line · Features (motion, themes, content layer, contact API, SEO, a11y) · Tech stack table with versions · Quick start (clone, `npm install`, `npm run dev`, `npm run build`) · Project structure tree with one-line purpose per folder · Customizing (brand name, colors via tokens, content files, images in `media.ts`) · Contact form integration (where `transport.ts` is and how to swap in Resend/webhook) · Deployment to Vercel (zero env vars today; what to add later) · Accessibility & performance notes · Roadmap toward dynamic backend/auth/CMS · Credits/attribution for Unsplash images · License + "sample content is fictional" disclaimer.
-
----
-
-## Validation plan
-
-Commands (run in `D:\work\agencyweb`, PowerShell — chain with `;` not `&&`):
+Commands (PowerShell, chain with `;`):
 
 1. `npm run lint`
 2. `npx tsc --noEmit`
-3. `npm run build` (must produce all static routes; confirm `/work/[slug]` pages are prerendered)
-4. `npm run dev` and confirm the site loads with no console errors and no hydration warnings
+3. `npm run build`
+4. `npm run dev` → confirm `http://localhost:3000` loads
 
-Manual checks:
+Checks:
 
-- Theme toggle persists across reloads and both themes are readable (headings, muted text, borders, buttons, cards).
-- Keyboard-only pass: skip link → nav → CTAs → accordions → carousel → form; focus always visible.
-- Reduced motion (`prefers-reduced-motion: reduce`): no marquee, parallax, tilt, cursor glow, GSAP pin; content still fully visible.
-- 360px width: no horizontal scroll; navbar usable; Process timeline collapses to a stacked list.
-- Light theme: aurora/grid/noise opacities retuned so nothing looks washed out.
-- All 6 case studies reachable from Work and from Home featured cards; unknown slug renders 404.
-- Contact form: invalid input shows field errors; valid submit shows success state; honeypot submissions are rejected silently; API returns typed errors.
-- Lighthouse mobile run on Home; note scores in the final summary.
+- **No leftovers:** `grep` for `violet`, `indigo`, `cyan`, `next-themes`, `useTheme`, `dark:`, `emerald`, `unsplash`, `next/image`, `disclaimer` must all return zero matches in `src/`.
+- **Single theme:** `<html>` has no `class` toggle; `color-scheme: dark`; no FOUC on reload.
+- **Palette discipline:** every accent on the page is `--lime`, `--toxic`, `--lime-soft`, `--warning`, or `--destructive`. No stray tailwind color families.
+- **Cards:** every panel uses `LimeSurface`; five signatures visibly distinct; hover lift and filament glow consistent.
+- **Contrast:** `#F2F5EF` and `#9AA79A` on `#050706` pass AA; lime `#A6F04C` text on near-black passes AA.
+- **Mobile (360/390):** no horizontal scroll; no marquee animation; no `backdrop-filter` on large surfaces; hero cone hidden below `md`; Lighthouse mobile Home ≥ 90 performance, ≥ 95 accessibility.
+- **Reduced motion:** hero cone static, GSAP Process timeline disabled, marquees stopped, no tilt/spotlight.
+- **Routes:** all 6 case studies reachable and prerendered; unknown slug → 404; `/contact` form validates and reports success; `/api/contact` rejects honeypot + rate limits.
+- **Visual parity:** hero reads as the reference screenshot — centered copy, three-line headline with lime phrase, lime pill CTA with circular arrow, check row, product stage under a top-down light cone.
 
-## Risks & mitigations
+## Risks
 
 | Risk | Mitigation |
 | --- | --- |
-| `create-next-app` refuses non-empty dir (`.git` present) | Scaffold into `%TEMP%` and copy into `D:\work\agencyweb`, preserving `.git` |
-| Sandbox denies npm/`npx`/pipe commands | Request approval per command; run commands one at a time without pipes |
-| shadcn init misconfigures Tailwind v4 | Verify `components.json` + `globals.css` `@theme inline` block before adding components |
-| GSAP + React 19 double-init in StrictMode | Always register plugins once inside a client provider; use `@gsap/react` `useGSAP` with scope + cleanup |
-| Hydration mismatch from theme/cursor/greensock | `suppressHydrationWarning` on `<html>`, mount-gate pointer effects, never read `window` during render |
-| Unsplash URL rot / hotlink failure | Centralize in `media.ts`, HEAD-check each URL at build time, `MediaFrame` gradient fallback |
-| Tailwind v4 `dark:` not applying with `next-themes` | Add `@custom-variant dark (&:is(.dark *));` and set `attribute="class"` |
-| Pinned GSAP section breaking layout on mobile | Pin only at `lg+` via `matchMedia`; stacked fallback below |
-
-## Done criteria
-
-- All 6 routes render with the final art direction; nothing looks like default shadcn.
-- Motion is layered (ambient CSS loops + scroll reveals + one GSAP pinned sequence + pointer micro-interactions) and never fights the user.
-- Dark and light themes both intentional, not auto-inverted.
-- `lint`, `tsc --noEmit`, and `build` pass with zero errors.
-- Dev server is running and the URL is reported.
-- README is complete enough that a stranger could clone, customize the brand, and deploy to Vercel.
+| Removing `next-themes` breaks `sonner` theming or `suppressHydrationWarning` assumptions | Hardcode `theme="dark"`; drop the attribute only after a build passes |
+| Deleting `media.ts` breaks `work.ts` and 5 consumers | Do the type change and all consumer updates in one task (step 5), then build |
+| Recolouring shadcn primitives leaves violet `ring`/`accent` states | Do primitives in step 7 and grep the palette afterwards |
+| Scroll-linked cone re-introduces mobile paint cost | Animate opacity/transform only, pre-blur with a fixed layer, hide below `md` |
+| Two large content rewrites (pillars + 6 case studies) drift from the components | Write content before components (step 6 precedes 8) |
+| `backdrop-filter` on many panels slows mobile | Only `translucent` tone, only above `md` |

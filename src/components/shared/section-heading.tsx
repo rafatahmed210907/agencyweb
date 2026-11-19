@@ -12,11 +12,11 @@ export function Eyebrow({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-primary",
+        "inline-flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#a6f04c]",
         className,
       )}
     >
-      {withLine ? <span aria-hidden="true" className="h-px w-6 bg-primary/50" /> : null}
+      {withLine ? <span aria-hidden="true" className="h-px w-6 bg-[rgba(166,240,76,0.5)]" /> : null}
       {children}
     </span>
   );
@@ -52,12 +52,12 @@ export function SectionHeading({
         {eyebrow ? <Eyebrow className="mb-4">{eyebrow}</Eyebrow> : null}
         <h2
           id={id}
-          className="text-[clamp(1.9rem,3.4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.03em]"
+          className="text-[clamp(1.9rem,3.4vw,2.9rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#f2f5ef]"
         >
           {title}
         </h2>
         {lede ? (
-          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted-foreground md:text-base">
+          <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[#9aa79a] md:text-base">
             {lede}
           </p>
         ) : null}

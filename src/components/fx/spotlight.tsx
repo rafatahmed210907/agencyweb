@@ -12,7 +12,7 @@ import { useRichMotion } from "@/hooks/use-media-query";
 export function SpotlightArea({
   children,
   className,
-  glow = "color-mix(in oklab, var(--violet) 22%, transparent)",
+  glow = "rgba(166,240,76,0.14)",
   size = 420,
 }: {
   children: ReactNode;

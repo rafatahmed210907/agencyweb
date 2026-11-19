@@ -17,7 +17,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/70 backdrop-blur-sm data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in",
+      "fixed inset-0 z-50 bg-black/75 data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in",
       className,
     )}
     {...props}
@@ -34,14 +34,14 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-card p-6 shadow-2xl",
+        "fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[rgba(166,240,76,0.16)] bg-[#0a0e0a] p-6 shadow-2xl",
         "data-[state=closed]:animate-fade-out data-[state=open]:animate-fade-in",
         className,
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-1.5 text-[#9aa79a] transition-colors hover:bg-white/5 hover:text-[#f2f5ef]">
         <X className="size-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -64,17 +64,10 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("mt-2 text-sm text-muted-foreground", className)}
+    className={cn("mt-2 text-sm text-[#9aa79a]", className)}
     {...props}
   />
 ));
 DialogDescription.displayName = "DialogDescription";
 
-export {
-  Dialog,
-  DialogTrigger,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-};
+export { Dialog, DialogTrigger, DialogClose, DialogContent, DialogTitle, DialogDescription };

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Eyebrow } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
-import { Aurora, GridBackdrop } from "@/components/fx/atmosphere";
+import { Sunspot, GridBackdrop } from "@/components/fx/atmosphere";
 
 export function PageHero({
   eyebrow,
@@ -18,24 +18,20 @@ export function PageHero({
 }) {
   return (
     <section className={cn("relative overflow-hidden pb-14 pt-32 sm:pb-16 sm:pt-36", className)}>
-      <Aurora intensity="subtle" />
+      <Sunspot />
       <GridBackdrop className="opacity-70" />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
-      />
       <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8">
         <Reveal>
           <Eyebrow>{eyebrow}</Eyebrow>
         </Reveal>
         <Reveal delay={0.06}>
-          <h1 className="mt-5 max-w-4xl text-[clamp(2.3rem,5vw,4rem)] font-semibold leading-[1.03] tracking-[-0.035em]">
+          <h1 className="mt-5 max-w-4xl text-[clamp(2.1rem,4.6vw,3.6rem)] font-semibold leading-[1.06] tracking-[-0.032em] text-[#f2f5ef]">
             {title}
           </h1>
         </Reveal>
         {lede ? (
           <Reveal delay={0.12}>
-            <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
+            <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-[#9aa79a] sm:text-base">
               {lede}
             </p>
           </Reveal>

@@ -17,7 +17,7 @@ export const stackGroups: StackGroup[] = [
     items: ["Vercel", "Cloudflare", "Docker", "GitHub Actions", "Playwright", "Sentry"],
   },
   {
-    title: "Design",
-    items: ["Figma", "Design tokens", "WCAG 2.2", "Prototyping", "Motion specs"],
+    title: "Growth",
+    items: ["Analytics", "Attribution", "Email automation", "Content systems", "A/B testing"],
   },
 ];

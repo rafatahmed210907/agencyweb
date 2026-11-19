@@ -5,15 +5,13 @@ import { ArrowLeft, ArrowUpRight, Check, Quote } from "lucide-react";
 import { Footer } from "@/components/layout/footer";
 import { Container, Section } from "@/components/layout/container";
 import { Reveal, RevealGroup, RevealItem } from "@/components/shared/reveal";
-import { MediaFrame } from "@/components/shared/media-frame";
-import { SectionHeading } from "@/components/shared/section-heading";
-import { Eyebrow } from "@/components/shared/section-heading";
+import { ArtFrame } from "@/components/shared/art-frame";
+import { SectionHeading, Eyebrow } from "@/components/shared/section-heading";
 import { CountUp } from "@/components/fx/count-up";
-import { Aurora, GridBackdrop } from "@/components/fx/atmosphere";
+import { Sunspot, GridBackdrop } from "@/components/fx/atmosphere";
+import { LimeSurface } from "@/components/fx/lime-surface";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { caseStudies, getCaseStudy, getNextCaseStudy } from "@/content/work";
-import { media } from "@/content/media";
+import { caseStudies, getCaseStudy, getNextCaseStudy, pillarLabels } from "@/content/work";
 import { buildMetadata } from "@/lib/seo";
 
 export const dynamicParams = false;
@@ -49,7 +47,6 @@ export default async function CaseStudyPage({
 
   if (!study) notFound();
 
-  const cover = media[study.cover];
   const next = getNextCaseStudy(study.slug);
 
   return (
@@ -57,13 +54,13 @@ export default async function CaseStudyPage({
       <main id="main">
         <article>
           <header className="relative overflow-hidden pb-12 pt-32 sm:pt-36">
-            <Aurora intensity="subtle" />
+            <Sunspot />
             <GridBackdrop className="opacity-60" />
             <Container className="relative">
               <Reveal>
                 <Link
                   href="/work"
-                  className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+                  className="inline-flex items-center gap-1.5 text-[13px] text-[#9aa79a] transition-colors hover:text-[#f2f5ef]"
                 >
                   <ArrowLeft className="size-3.5" />
                   All case studies
@@ -73,46 +70,53 @@ export default async function CaseStudyPage({
               <Reveal delay={0.05}>
                 <div className="mt-6 flex flex-wrap items-center gap-2.5">
                   <Eyebrow withLine={false}>{study.client}</Eyebrow>
-                  <span aria-hidden="true" className="h-3 w-px bg-border" />
-                  <span className="font-mono text-[11px] text-muted-foreground">{study.year}</span>
+                  <span aria-hidden="true" className="h-3 w-px bg-white/15" />
+                  <span className="font-mono text-[11px] text-[#6b776b]">{study.year}</span>
+                  <span aria-hidden="true" className="h-3 w-px bg-white/15" />
+                  <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#9aa79a]">
+                    {pillarLabels[study.pillar]}
+                  </span>
                 </div>
               </Reveal>
 
               <Reveal delay={0.1}>
-                <h1 className="mt-4 max-w-4xl text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
+                <h1 className="mt-4 max-w-4xl text-[clamp(1.9rem,4.2vw,3.2rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-[#f2f5ef]">
                   {study.title}
                 </h1>
               </Reveal>
 
               <Reveal delay={0.16}>
-                <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">
+                <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#9aa79a] sm:text-base">
                   {study.summary}
                 </p>
               </Reveal>
 
               <Reveal delay={0.22}>
-                <dl className="mt-9 grid gap-x-10 gap-y-6 border-t border-border pt-7 sm:grid-cols-3">
+                <dl className="mt-9 grid gap-x-10 gap-y-6 border-t border-[rgba(166,240,76,0.12)] pt-7 sm:grid-cols-3">
                   <div>
-                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b776b]">
                       Services
                     </dt>
                     <dd className="mt-2 flex flex-wrap gap-1.5">
                       {study.services.map((service) => (
-                        <Badge key={service} variant="secondary" className="normal-case tracking-normal">
+                        <span
+                          key={service}
+                          className="rounded-md border border-[rgba(166,240,76,0.14)] bg-[rgba(166,240,76,0.06)] px-2 py-0.5 text-[11px] text-[#c3ccc3]"
+                        >
                           {service}
-                        </Badge>
+                        </span>
                       ))}
                     </dd>
                   </div>
                   <div>
-                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b776b]">
                       Stack
                     </dt>
                     <dd className="mt-2 flex flex-wrap gap-1.5">
                       {study.stack.map((item) => (
                         <span
                           key={item}
-                          className="rounded-md border border-border bg-background/40 px-2 py-0.5 font-mono text-[11px] text-muted-foreground"
+                          className="rounded-md border border-[rgba(166,240,76,0.1)] bg-black/40 px-2 py-0.5 font-mono text-[11px] text-[#9aa79a]"
                         >
                           {item}
                         </span>
@@ -120,10 +124,10 @@ export default async function CaseStudyPage({
                     </dd>
                   </div>
                   <div>
-                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b776b]">
                       Year
                     </dt>
-                    <dd className="mt-2 text-sm tabular">{study.year}</dd>
+                    <dd className="mt-2 text-sm tabular text-[#dfe8df]">{study.year}</dd>
                   </div>
                 </dl>
               </Reveal>
@@ -132,12 +136,12 @@ export default async function CaseStudyPage({
 
           <Container>
             <Reveal>
-              <MediaFrame
-                src={cover.src}
-                alt={cover.alt}
+              <ArtFrame
+                pattern={study.cover.pattern}
+                label={study.cover.label}
+                variant={study.cover.variant}
                 aspect="aspect-[16/9]"
-                priority
-                sizes="(max-width: 1152px) 100vw, 1152px"
+                className="rounded-2xl"
               />
             </Reveal>
           </Container>
@@ -151,27 +155,27 @@ export default async function CaseStudyPage({
                   </div>
                 </Reveal>
                 <Reveal delay={0.06}>
-                  <p className="text-lg leading-relaxed text-foreground/90 sm:text-xl">
-                    {study.challenge}
-                  </p>
+                  <p className="text-lg leading-relaxed text-[#dfe8df] sm:text-xl">{study.challenge}</p>
                 </Reveal>
               </div>
             </Container>
           </Section>
 
-          <Section className="border-y border-border bg-surface/40 pt-14">
+          <Section className="border-y border-[rgba(166,240,76,0.1)] pt-14">
             <Container>
               <SectionHeading eyebrow="Approach" title="What we actually did." />
               <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {study.approach.map((item, index) => (
                   <RevealItem key={item.title}>
-                    <div className="h-full rounded-2xl border border-border bg-card/50 p-6">
-                      <span className="font-mono text-xs text-primary">
+                    <LimeSurface edge="top" className="h-full p-6">
+                      <span className="font-mono text-xs text-[#a6f04c]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className="mt-3 text-base font-semibold tracking-tight">{item.title}</h3>
-                      <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-                    </div>
+                      <h3 className="mt-3 text-base font-semibold tracking-[-0.01em] text-[#f2f5ef]">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2.5 text-sm leading-relaxed text-[#9aa79a]">{item.body}</p>
+                    </LimeSurface>
                   </RevealItem>
                 ))}
               </RevealGroup>
@@ -187,10 +191,14 @@ export default async function CaseStudyPage({
                     {study.metrics.map((metric) => (
                       <RevealItem key={metric.label}>
                         <div>
-                          <p className="text-[clamp(1.6rem,3vw,2.2rem)] font-semibold leading-none tracking-[-0.03em] tabular">
-                            <CountUp value={metric.value} suffix={metric.suffix} />
+                          <p className="text-[clamp(1.6rem,3vw,2.2rem)] font-semibold leading-none tracking-[-0.03em] tabular text-[#f2f5ef]">
+                            <CountUp
+                              value={metric.value}
+                              suffix={metric.suffix}
+                              decimals={metric.decimals ?? 0}
+                            />
                           </p>
-                          <p className="mt-2 text-xs text-muted-foreground">{metric.label}</p>
+                          <p className="mt-2 text-xs text-[#6b776b]">{metric.label}</p>
                         </div>
                       </RevealItem>
                     ))}
@@ -198,10 +206,10 @@ export default async function CaseStudyPage({
                 </div>
 
                 <Reveal direction="left">
-                  <ul className="space-y-3 rounded-2xl border border-border bg-card/40 p-6">
+                  <ul className="space-y-3 rounded-2xl border border-[rgba(166,240,76,0.12)] bg-[rgba(10,14,10,0.6)] p-6">
                     {study.highlights.map((highlight) => (
-                      <li key={highlight} className="flex items-start gap-3 text-sm text-foreground/85">
-                        <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
+                      <li key={highlight} className="flex items-start gap-3 text-sm text-[#c3ccc3]">
+                        <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-[rgba(166,240,76,0.14)] text-[#a6f04c]">
                           <Check className="size-2.5" strokeWidth={3} />
                         </span>
                         {highlight}
@@ -213,13 +221,13 @@ export default async function CaseStudyPage({
 
               {study.testimonial ? (
                 <Reveal delay={0.08}>
-                  <figure className="mt-14 rounded-2xl border border-border bg-card/50 p-8 sm:p-10">
-                    <Quote className="size-7 text-primary/50" aria-hidden="true" />
-                    <blockquote className="mt-5 max-w-3xl text-lg leading-relaxed text-foreground/90 sm:text-xl">
+                  <figure className="mt-14 rounded-2xl border border-[rgba(166,240,76,0.12)] bg-[rgba(10,14,10,0.6)] p-8 sm:p-10">
+                    <Quote className="size-7 text-[rgba(166,240,76,0.5)]" aria-hidden="true" />
+                    <blockquote className="mt-5 max-w-3xl text-lg leading-relaxed text-[#dfe8df] sm:text-xl">
                       “{study.testimonial.quote}”
                     </blockquote>
-                    <figcaption className="mt-6 text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">{study.testimonial.name}</span>
+                    <figcaption className="mt-6 text-sm text-[#9aa79a]">
+                      <span className="font-medium text-[#f2f5ef]">{study.testimonial.name}</span>
                       {" · "}
                       {study.testimonial.role}
                     </figcaption>
@@ -227,41 +235,40 @@ export default async function CaseStudyPage({
                 </Reveal>
               ) : null}
 
-              <RevealGroup className="mt-6 grid gap-4 sm:grid-cols-2">
-                {study.gallery.map((key) => {
-                  const asset = media[key];
-                  return (
-                    <RevealItem key={key}>
-                      <MediaFrame
-                        src={asset.src}
-                        alt={asset.alt}
-                        aspect="aspect-[4/3]"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                    </RevealItem>
-                  );
-                })}
+              <RevealGroup className="mt-4 grid gap-4 sm:grid-cols-2">
+                {study.gallery.map((visual) => (
+                  <RevealItem key={visual.label}>
+                    <ArtFrame
+                      pattern={visual.pattern}
+                      label={visual.label}
+                      variant={visual.variant}
+                      aspect="aspect-[4/3]"
+                    />
+                  </RevealItem>
+                ))}
               </RevealGroup>
             </Container>
           </Section>
         </article>
 
-        <Section className="border-t border-border pt-14">
+        <Section className="border-t border-[rgba(166,240,76,0.1)] pt-14">
           <Container>
             <Link
               href={`/work/${next.slug}`}
-              className="group flex flex-col justify-between gap-6 rounded-2xl border border-border bg-card/45 p-7 transition-colors hover:border-primary/30 sm:flex-row sm:items-center"
+              className="group flex flex-col justify-between gap-6 rounded-2xl border border-[rgba(166,240,76,0.14)] bg-[rgba(10,14,10,0.6)] p-7 transition-colors hover:border-[rgba(166,240,76,0.32)] sm:flex-row sm:items-center"
             >
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b776b]">
                   Next project
                 </p>
-                <p className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">{next.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-2 text-xl font-semibold tracking-[-0.02em] text-[#f2f5ef] sm:text-2xl">
+                  {next.title}
+                </p>
+                <p className="mt-1 text-sm text-[#9aa79a]">
                   {next.client} · {next.year}
                 </p>
               </div>
-              <span className="inline-flex items-center gap-2 text-[13px] font-medium text-primary">
+              <span className="inline-flex items-center gap-2 text-[13px] font-medium text-[#a6f04c]">
                 Read case study
                 <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>

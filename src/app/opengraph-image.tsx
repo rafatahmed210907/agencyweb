@@ -16,10 +16,10 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px",
-          background: "#141018",
+          background: "#050706",
           backgroundImage:
-            "radial-gradient(60% 60% at 18% 0%, rgba(139,92,246,0.42), transparent 60%), radial-gradient(50% 50% at 100% 100%, rgba(56,189,248,0.24), transparent 62%)",
-          color: "#f5f3fb",
+            "radial-gradient(55% 55% at 50% -10%, rgba(198,249,138,0.22), transparent 62%), radial-gradient(45% 45% at 100% 100%, rgba(57,255,20,0.12), transparent 64%)",
+          color: "#f2f5ef",
           fontFamily: "sans-serif",
         }}
       >
@@ -29,12 +29,14 @@ export default async function OpengraphImage() {
               width: 52,
               height: 52,
               borderRadius: 14,
-              border: "1.5px solid rgba(167,139,250,0.55)",
+              border: "1.5px solid rgba(166,240,76,0.55)",
+              background: "rgba(166,240,76,0.12)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: 22,
-              color: "#c4b5fd",
+              fontWeight: 700,
+              color: "#c6f98a",
             }}
           >
             N
@@ -43,15 +45,35 @@ export default async function OpengraphImage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div style={{ fontSize: 68, fontWeight: 600, lineHeight: 1.05, letterSpacing: "-0.04em", maxWidth: 900 }}>
-            Software studio for ambitious products.
+          <div
+            style={{
+              display: "flex",
+              fontSize: 68,
+              fontWeight: 600,
+              lineHeight: 1.05,
+              letterSpacing: "-0.04em",
+              maxWidth: 960,
+            }}
+          >
+            <span>Plan it. Build it.&nbsp;</span>
+            <span style={{ color: "#a6f04c" }}>Grow it.</span>
           </div>
-          <div style={{ fontSize: 26, color: "#b7b1c9", maxWidth: 820 }}>
-            Product design, web platforms, and design systems — built by a small senior team.
+          <div style={{ fontSize: 26, color: "#9aa79a", maxWidth: 860 }}>
+            One studio for the whole product lifecycle — planning and establishment, design and
+            development, maintenance, and marketing.
           </div>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#9a93ad" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: 22,
+            color: "#6b776b",
+            borderTop: "1px solid rgba(166,240,76,0.16)",
+            paddingTop: 24,
+          }}
+        >
           <span>northlane.studio</span>
           <span>Next.js · TypeScript · Tailwind</span>
         </div>

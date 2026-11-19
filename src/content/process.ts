@@ -10,28 +10,28 @@ export const processSteps: ProcessStep[] = [
     index: "01",
     title: "Frame",
     description:
-      "We start with the decision you are trying to make possible, not the screen that shows it. A short discovery sprint produces a shared map of users, constraints, and the riskiest assumptions.",
+      "We start with the decision you are trying to make possible, not the screen that shows it. A discovery sprint produces a shared map of users, constraints, and the riskiest assumptions.",
     deliverables: ["Discovery notes", "Success metrics", "Scope and risk map"],
   },
   {
     index: "02",
-    title: "Shape",
+    title: "Establish",
     description:
-      "Flows and interfaces get built in the browser as clickable prototypes, so we are reviewing behavior instead of debating static pictures.",
-    deliverables: ["Flow prototypes", "UI direction", "Token draft"],
+      "Architecture, stack, and environments are settled and stood up. You get a working deploy in the first week, so every later conversation happens against real infrastructure.",
+    deliverables: ["Architecture doc", "Live environment", "Phased roadmap"],
   },
   {
     index: "03",
     title: "Build",
     description:
-      "Production code from day one, in your repo, behind your review process. Weekly demos on a live URL replace status documents.",
-    deliverables: ["Working build", "Component library", "Integration docs"],
+      "Design and engineering run together in production code. Weekly live demos replace status documents, and scope changes are written down with their cost.",
+    deliverables: ["Design direction", "Working build", "Component library"],
   },
   {
     index: "04",
-    title: "Harden",
+    title: "Grow",
     description:
-      "Accessibility, performance, and observability passes before launch. Then a handoff that leaves your team owning the code with confidence.",
-    deliverables: ["A11y audit", "Performance budget", "Runbook and handoff"],
+      "We harden what shipped, then carry it into market and keep it running: accessibility and performance passes, launch campaign, and a maintenance retainer.",
+    deliverables: ["A11y + perf audit", "Launch campaign", "Maintenance retainer"],
   },
 ];

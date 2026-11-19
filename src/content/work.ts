@@ -1,154 +1,169 @@
-import { media, type MediaKey } from "./media";
+import type { VisualSpec } from "./art";
+
+export type PillarKey = "planning" | "build" | "marketing";
 
 export interface CaseStudy {
   slug: string;
   title: string;
   client: string;
   year: number;
+  pillar: PillarKey;
   summary: string;
   services: string[];
   stack: string[];
-  cover: MediaKey;
-  metrics: { label: string; value: number; suffix?: string }[];
+  cover: VisualSpec;
+  metrics: { label: string; value: number; suffix?: string; decimals?: number }[];
   challenge: string;
   approach: { title: string; body: string }[];
   highlights: string[];
-  gallery: MediaKey[];
+  gallery: VisualSpec[];
   testimonial?: { quote: string; name: string; role: string };
   featured: boolean;
 }
 
 export const caseStudies: CaseStudy[] = [
   {
-    slug: "atlas-telemetry",
-    title: "A telemetry console for live infrastructure",
+    slug: "atlas-console",
+    title: "Establishing a telemetry platform in six weeks",
     client: "Atlas Systems",
     year: 2025,
+    pillar: "planning",
     summary:
-      "Atlas monitors thousands of edge nodes in real time. We rebuilt their console around a streaming data model so operators can spot failures before they cascade.",
-    services: ["Product design", "Design systems", "Web platforms"],
-    stack: ["Next.js", "TypeScript", "Postgres", "WebSockets", "Tailwind"],
-    cover: "caseAtlas",
+      "Atlas had funding, a rough deck, and no technical plan. We ran discovery, fixed the architecture, and stood up a working console before their first enterprise call.",
+    services: ["Discovery", "Architecture", "Establishment"],
+    stack: ["Next.js", "TypeScript", "Postgres", "WebSockets"],
+    cover: { pattern: "rings", label: "Atlas / telemetry", variant: 0 },
     metrics: [
-      { label: "Time to triage", value: 62, suffix: "% faster" },
-      { label: "Nodes observed", value: 24, suffix: "k+" },
-      { label: "Console bundle", value: 41, suffix: "% smaller" },
+      { label: "Time to first demo", value: 6, suffix: " weeks" },
+      { label: "Scope changes after sign-off", value: 0, suffix: "" },
+      { label: "Nodes observed at launch", value: 24, suffix: "k+" },
     ],
     challenge:
-      "The legacy console rendered static snapshots on a refresh cycle. Operators watched stale charts, missed anomaly spikes, and had four different tabs open to answer a single question.",
+      "The founders were three weeks from an enterprise pilot with no repository, no data model, and an infrastructure diagram on a whiteboard. Every decision was still open.",
     approach: [
       {
-        title: "Map the operator's actual loop",
-        body: "We shadowed two on-call engineers for a week and mapped every step between an alert and a decision. Three of the five tabs existed only to join data that should have been in one view.",
+        title: "Discovery before architecture",
+        body: "Two days of workshops produced a written brief: who the operators are, what a decision needs, and which assumptions could sink the pilot.",
       },
       {
-        title: "Design around a stream, not a page",
-        body: "Every panel subscribes to a shared realtime channel with a typed event contract, so charts, tables, and alerts move together instead of drifting apart.",
+        title: "Fix the contract, not the UI",
+        body: "We specified the realtime event contract and the data model first. Interface work became a consequence of those decisions instead of a guessing game.",
       },
       {
-        title: "Build a token layer first",
-        body: "Dense data UI needs strict type and spacing rules. We shipped a token set with eight density steps before touching a single panel.",
+        title: "Establish in week one",
+        body: "Repository, CI, preview environments, and a seeded dataset were live on day five, so every later demo happened on real infrastructure.",
       },
     ],
     highlights: [
-      "Streaming charts with a 200ms render budget and automatic downsampling",
-      "Keyboard-first command palette for jumping between nodes and incidents",
-      "A dark, high-contrast theme tuned for all-day monitoring",
-      "Design system with 46 components documented in Storybook",
+      "Written discovery brief signed off by all three founders",
+      "Phased roadmap with fixed outcomes per two-week block",
+      "Streaming data contract documented before any component was built",
+      "Working environment and deploy pipeline inside week one",
     ],
-    gallery: ["galleryStudio", "galleryDesk"],
+    gallery: [
+      { pattern: "grid", label: "Architecture map", variant: 1 },
+      { pattern: "bars", label: "Load profile", variant: 2 },
+    ],
     testimonial: {
       quote:
-        "Our on-call engineers stopped complaining about the console. That has literally never happened before.",
+        "They turned a whiteboard into something we could actually demo, and they did it without us having to make a single decision twice.",
       name: "Dana Whitfield",
-      role: "VP Engineering, Atlas Systems",
+      role: "Co-founder, Atlas Systems",
     },
     featured: true,
   },
   {
-    slug: "kite-billing",
-    title: "Usage-based billing that customers trust",
+    slug: "kite-launch",
+    title: "Scoping a usage-based billing launch",
     client: "Kite",
     year: 2025,
+    pillar: "planning",
     summary:
-      "Kite needed transparent, usage-based invoicing for a developer API. We designed and built the pricing simulator, invoice timeline, and self-serve plan changes.",
-    services: ["Product design", "Web platforms", "Hardening"],
-    stack: ["Next.js", "Stripe", "tRPC", "Prisma", "Tailwind"],
-    cover: "caseKite",
+      "Kite needed to launch metered billing without breaking existing customers. We scoped the migration, defined the event schema, and set up the environments the team still runs today.",
+    services: ["Discovery", "Scope & roadmap", "Establishment"],
+    stack: ["Next.js", "Stripe", "tRPC", "Prisma"],
+    cover: { pattern: "cells", label: "Kite / billing", variant: 1 },
     metrics: [
-      { label: "Billing tickets", value: 71, suffix: "% fewer" },
+      { label: "Billing tickets after launch", value: 71, suffix: "% fewer" },
       { label: "Self-serve upgrades", value: 3, suffix: ".4x" },
-      { label: "Invoice disputes", value: 0, suffix: " net new" },
+      { label: "Migration incidents", value: 0, suffix: "" },
     ],
     challenge:
-      "Customers could not predict what a month would cost, so upgrades stalled and support absorbed the confusion. Finance wanted accuracy; product wanted fewer tickets.",
+      "Existing contracts were flat-rate, the product was already metered internally, and finance wanted predictable revenue. Nobody agreed on what an event should be.",
     approach: [
       {
-        title: "Make the meter visible",
-        body: "We exposed the same usage events that drive billing as a live simulator, so a customer can model next month before committing.",
+        title: "Map the money paths",
+        body: "We traced every path that could create a charge, then wrote the schema that all of them had to satisfy before any code changed.",
       },
       {
-        title: "Explain every line item",
-        body: "Each invoice row links back to the events that produced it, with a plain-language reason string attached to each charge.",
+        title: "Sequence the migration",
+        body: "Grandfathered plans, new plans, and proration became three separate phases with their own acceptance criteria.",
       },
       {
-        title: "Design the failure paths",
-        body: "Failed payments, proration, and plan downgrades got designed states and copy before the happy path shipped.",
+        title: "Stand up the test bed",
+        body: "A staging environment with synthetic invoices let finance validate numbers before customers ever saw them.",
       },
     ],
     highlights: [
-      "Interactive pricing simulator with saved scenarios",
-      "Invoice timeline with per-line drill-down into raw events",
-      "Proration preview before confirming a plan change",
-      "Webhook-backed reconciliation job with an audit trail",
+      "Event schema with a documented contract for every billable action",
+      "Three-phase migration plan with acceptance criteria per phase",
+      "Staging environment with synthetic invoice generation",
+      "Runbook for billing incidents handed to the internal team",
     ],
-    gallery: ["galleryMeeting", "galleryDesk"],
-    testimonial: {
-      quote:
-        "We went from dreading billing week to answering questions in the product instead of in a support queue.",
-      name: "Marco Ferrante",
-      role: "Head of Product, Kite",
-    },
+    gallery: [
+      { pattern: "mesh", label: "Invoice timeline", variant: 0 },
+      { pattern: "arcs", label: "Revenue paths", variant: 3 },
+    ],
     featured: true,
   },
   {
-    slug: "meridian-mapping",
-    title: "A mapping workspace for field research",
+    slug: "meridian-platform",
+    title: "A field research platform, designed and built",
     client: "Meridian Labs",
     year: 2024,
+    pillar: "build",
     summary:
-      "Meridian's researchers collect geospatial observations offline in remote areas. We built an offline-first capture app and a web workspace for analysis.",
-    services: ["Product design", "Web platforms", "Performance work"],
-    stack: ["Next.js", "MapLibre", "SQLite", "IndexedDB", "Service Workers"],
-    cover: "caseMeridian",
+      "We designed and built an offline-first capture app plus the web workspace used to analyse it — then kept both healthy through two research seasons.",
+    services: ["Design", "Development", "Maintenance"],
+    stack: ["Next.js", "MapLibre", "SQLite", "Service Workers"],
+    cover: { pattern: "arcs", label: "Meridian / field", variant: 2 },
     metrics: [
-      { label: "Offline capture uptime", value: 99, suffix: ".98%" },
-      { label: "Sync conflict rate", value: 0, suffix: ".2%" },
-      { label: "First map render", value: 0, suffix: ".9s" },
+      { label: "Offline capture uptime", value: 99, suffix: ".98%", decimals: 2 },
+      { label: "Sync conflict rate", value: 0, suffix: ".2%", decimals: 1 },
+      { label: "First map render", value: 0, suffix: ".9s", decimals: 1 },
     ],
     challenge:
       "Field teams worked for days without connectivity, then needed every observation to reconcile cleanly with the lab's canonical dataset.",
     approach: [
       {
         title: "Local-first by default",
-        body: "Every write lands in a local database first. The network is treated as an optional sync channel, never a requirement.",
+        body: "Every write lands in a local database first. The network is an optional sync channel, never a requirement.",
       },
       {
-        title: "Deterministic merges",
-        body: "We designed a crdt-lite merge strategy with explicit conflict surfaces, so researchers can resolve the rare conflict instead of guessing.",
+        title: "Design for glare and gloves",
+        body: "Tap targets, contrast, and type scale were set against field photos, not a desktop monitor.",
       },
       {
-        title: "Map performance budget",
-        body: "Vector tiles were pre-cut per region so a 60k-feature view renders under a second on a mid-range tablet.",
+        title: "Keep it healthy",
+        body: "A retainer covered tile pipeline upkeep, dependency upgrades, and on-call during both research seasons.",
       },
     ],
     highlights: [
-      "Offline capture with background sync and resumable uploads",
+      "Offline capture with resumable background sync",
       "Conflict review queue with side-by-side diffs",
       "Region-scoped vector tile pipeline",
-      "Field-tested tap targets and high-glare color palette",
+      "Two seasons of continuous maintenance with no data-loss incidents",
     ],
-    gallery: ["galleryWorkspace", "galleryMeeting"],
+    gallery: [
+      { pattern: "grid", label: "Capture flow", variant: 2 },
+      { pattern: "rings", label: "Sync topology", variant: 1 },
+    ],
+    testimonial: {
+      quote:
+        "They built it, then kept it running through two seasons. That continuity is worth more than any launch sprint.",
+      name: "Ines Marchetti",
+      role: "Research Director, Meridian Labs",
+    },
     featured: true,
   },
   {
@@ -156,11 +171,12 @@ export const caseStudies: CaseStudy[] = [
     title: "Cutting onboarding from 14 days to 40 minutes",
     client: "Signal",
     year: 2024,
+    pillar: "build",
     summary:
-      "Signal's enterprise onboarding ran on spreadsheets and calls. We replaced it with a guided setup flow that provisions a tenant, imports data, and invites a team.",
-    services: ["Product design", "Design systems", "Motion engineering"],
-    stack: ["Next.js", "React Server Components", "Zod", "Postgres", "Framer Motion"],
-    cover: "caseSignal",
+      "Signal's enterprise onboarding ran on spreadsheets and calls. We designed and shipped a guided setup flow, then maintained it through a season of pricing changes.",
+    services: ["Design", "Development", "QA & hardening"],
+    stack: ["Next.js", "Server Components", "Zod", "Postgres"],
+    cover: { pattern: "bars", label: "Signal / onboarding", variant: 0 },
     metrics: [
       { label: "Activation time", value: 40, suffix: " min" },
       { label: "Setup drop-off", value: 84, suffix: "% lower" },
@@ -170,111 +186,116 @@ export const caseStudies: CaseStudy[] = [
       "Every new enterprise customer needed a solutions engineer to hand-build their workspace. The company could not grow faster than its onboarding team.",
     approach: [
       {
-        title: "Find the real fork in the road",
-        body: "Analytics showed 80% of customers followed three setup paths. We designed explicit branches for those and a manual escalation for the rest.",
+        title: "Find the real fork",
+        body: "Analytics showed 80% of customers followed three setup paths. We designed explicit branches for those and an escalation for the rest.",
       },
       {
         title: "Show the workspace forming",
-        body: "Rather than a progress bar, each step rendered the real tenant being created, which kept users oriented and reduced abandonment.",
+        body: "Each step rendered the real tenant being created rather than a progress bar, which kept users oriented.",
       },
       {
-        title: "Instrument every step",
-        body: "Each step emitted typed analytics events so the team could see exactly where customers stalled after launch.",
+        title: "Harden before launch",
+        body: "A full accessibility and performance pass ran before release, with budgets published to the team.",
       },
     ],
     highlights: [
       "Guided tenant provisioning with resumable drafts",
       "CSV import with column mapping and validation preview",
-      "Team invitations with role presets",
-      "Motion-led progress that reflects real backend state",
+      "Typed analytics events on every step",
+      "WCAG AA audit with fixes shipped pre-launch",
     ],
-    gallery: ["galleryDesk", "galleryStudio"],
-    testimonial: {
-      quote:
-        "The flow is so good that our solutions engineers now only touch accounts that genuinely need customization.",
-      name: "Priya Raman",
-      role: "Director of Customer Experience, Signal",
-    },
+    gallery: [
+      { pattern: "cells", label: "Setup steps", variant: 2 },
+      { pattern: "mesh", label: "Tenant provision", variant: 1 },
+    ],
     featured: false,
   },
   {
-    slug: "harbor-portal",
-    title: "A partner portal that replaced nine spreadsheets",
+    slug: "harbor-launch",
+    title: "Launching a partner portal to 310 freight partners",
     client: "Harbor Logistics",
     year: 2023,
+    pillar: "marketing",
     summary:
-      "Harbor's freight partners tracked shipments across email threads. We shipped a portal with shared shipment records, documents, and dispute handling.",
-    services: ["Product design", "Web platforms", "Hardening"],
-    stack: ["Next.js", "TypeScript", "Supabase", "Tailwind", "Playwright"],
-    cover: "caseHarbor",
+      "Harbor had a platform nobody outside the company knew about. We positioned it, ran the partner launch, and built the content engine that keeps sign-ups moving.",
+    services: ["Positioning", "Launch", "Content engine"],
+    stack: ["Next.js", "TypeScript", "Supabase", "Plausible"],
+    cover: { pattern: "mesh", label: "Harbor / launch", variant: 2 },
     metrics: [
+      { label: "Partners onboarded in 90 days", value: 310, suffix: "+" },
       { label: "Weekly partner emails", value: 78, suffix: "% fewer" },
-      { label: "Dispute resolution", value: 4, suffix: ".2 days avg" },
-      { label: "Active partners", value: 310, suffix: "+" },
+      { label: "Qualified sign-ups", value: 4, suffix: ".1x" },
     ],
     challenge:
-      "Partners had no shared source of truth, so shipment status lived in email attachments and disputes became archaeology.",
+      "The portal was genuinely useful and completely unknown. Partners still sent shipments by email because the portal had been announced once, in a PDF.",
     approach: [
       {
-        title: "One record, two audiences",
-        body: "Shipment data is the same record for Harbor staff and partners, with role-scoped views instead of parallel systems.",
+        title: "Rewrite the message",
+        body: "We replaced feature language with the one outcome partners cared about: fewer emails, one shared record.",
       },
       {
-        title: "Documents as first-class objects",
-        body: "Every upload is versioned, attributable, and linked to the shipment, so the paper trail is the product.",
+        title: "Run a staged launch",
+        body: "Ten pilot partners, then a regional wave, then the full network — each with its own landing page and email sequence.",
       },
       {
-        title: "Test the disputes first",
-        body: "We ran an end-to-end test suite against dispute flows before the demo, because that was where trust was lost.",
+        title: "Build a content engine",
+        body: "Templates and a monthly cadence let the internal team keep publishing without an agency retainer.",
       },
     ],
     highlights: [
-      "Role-scoped shipment views with audit history",
-      "Versioned document vault with inline previews",
-      "Structured dispute workflow with deadlines",
-      "Playwright suite covering 40 critical journeys",
+      "Positioning doc adopted by product, sales, and support",
+      "Three-stage launch with per-stage landing pages",
+      "Email sequences written and automated",
+      "Monthly reporting tied to activated partners, not impressions",
     ],
-    gallery: ["galleryWorkspace", "galleryStudio"],
+    gallery: [
+      { pattern: "bars", label: "Launch waves", variant: 3 },
+      { pattern: "grid", label: "Channel plan", variant: 0 },
+    ],
     featured: false,
   },
   {
-    slug: "verdant-design-system",
-    title: "A design system for a climate data platform",
+    slug: "verdant-growth",
+    title: "Turning a design system into a growth story",
     client: "Verdant",
     year: 2023,
+    pillar: "marketing",
     summary:
-      "Verdant had four product teams shipping four different visual languages. We built a shared token layer and component library adopted across all of them.",
-    services: ["Design systems", "Motion engineering", "Performance work"],
-    stack: ["React", "Tailwind", "Radix", "Storybook", "Turborepo"],
-    cover: "caseVerdant",
+      "Verdant had rebuilt its product on a shared design system but had no story to tell about it. We packaged the work into a launch campaign that drove qualified demand.",
+    services: ["Positioning", "Content engine", "Measurement"],
+    stack: ["Next.js", "Storybook", "Turborepo", "Plausible"],
+    cover: { pattern: "grid", label: "Verdant / growth", variant: 3 },
     metrics: [
-      { label: "UI build time", value: 55, suffix: "% faster" },
-      { label: "Shared components", value: 72, suffix: " shipped" },
-      { label: "Teams adopted", value: 4, suffix: " of 4" },
+      { label: "Demo requests", value: 62, suffix: "% lift" },
+      { label: "Organic sessions", value: 2, suffix: ".8x" },
+      { label: "Content pieces shipped", value: 24, suffix: "" },
     ],
     challenge:
-      "Each team had its own button, its own spacing scale, and its own interpretation of accessibility. Fixes had to be made four times.",
+      "The system work was real and expensive, but invisible to buyers. Marketing had no proof points and sales had no narrative.",
     approach: [
       {
-        title: "Audit before abstracting",
-        body: "We catalogued 240 unique UI patterns across the products and found the 60 that actually mattered.",
+        title: "Package the invisible",
+        body: "We documented the migration as a case study with before/after build times and shipped it as the lead asset.",
       },
       {
-        title: "Tokens as the contract",
-        body: "Color, type, motion, and spacing were defined once and published to every package, with a diffable changelog.",
+        title: "Write for buyers, not engineers",
+        body: "Technical work was translated into velocity and consistency claims that a product leader could repeat.",
       },
       {
-        title: "Adoption as a product problem",
-        body: "We wrote migration guides, ran pair-coding sessions, and tracked adoption per team instead of declaring victory at publish.",
+        title: "Measure what matters",
+        body: "Attribution moved from page views to demo requests, reviewed weekly against the content calendar.",
       },
     ],
     highlights: [
-      "Multi-package library with versioned releases",
-      "72 accessible Radix-based components",
-      "Motion presets with reduced-motion defaults",
-      "Automated visual regression on every change",
+      "Flagship case study used as the primary sales asset",
+      "24 content pieces shipped on a repeatable template",
+      "Weekly measurement review tied to demo requests",
+      "Narrative adopted across the sales deck and website",
     ],
-    gallery: ["galleryMeeting", "galleryDesk"],
+    gallery: [
+      { pattern: "arcs", label: "Content funnel", variant: 1 },
+      { pattern: "cells", label: "Asset library", variant: 0 },
+    ],
     featured: false,
   },
 ];
@@ -290,6 +311,8 @@ export function getNextCaseStudy(slug: string): CaseStudy {
   return caseStudies[(index + 1) % caseStudies.length];
 }
 
-export function caseCover(key: MediaKey) {
-  return media[key];
-}
+export const pillarLabels: Record<PillarKey, string> = {
+  planning: "Planning → Establishment",
+  build: "Design · Dev · Maintenance",
+  marketing: "Marketing",
+};

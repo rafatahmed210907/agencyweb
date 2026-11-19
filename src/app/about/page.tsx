@@ -6,17 +6,18 @@ import { PageHero } from "@/components/layout/page-hero";
 import { Container, Section } from "@/components/layout/container";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/shared/reveal";
-import { MediaFrame } from "@/components/shared/media-frame";
-import { Aurora } from "@/components/fx/atmosphere";
+import { ArtFrame } from "@/components/shared/art-frame";
+import { Sunspot, GridBackdrop } from "@/components/fx/atmosphere";
+import { LimeSurface } from "@/components/fx/lime-surface";
 import { Button } from "@/components/ui/button";
 import { milestones, team, values } from "@/content/studio";
-import { media } from "@/content/media";
+import { pillars } from "@/content/pillars";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "About",
   description:
-    "Northlane is a small senior software studio building product interfaces and web platforms. Meet the team and how we work.",
+    "Northlane is a small senior studio taking products from planning and establishment through design, development, maintenance and marketing.",
   path: "/about",
 });
 
@@ -30,10 +31,10 @@ export default function AboutPage() {
             <>
               Small by design.
               <br />
-              <span className="text-gradient">Senior by default.</span>
+              <span className="text-[#a6f04c]">Senior by default.</span>
             </>
           }
-          lede="Northlane is six specialists who design and build product software together. No account layer, no junior handoff — the people in the first call are the people writing the code."
+          lede="Northlane is six specialists who plan, design, build and market software products together. No account layer, no junior handoff — the people in the first call are the people doing the work."
         />
 
         <Section className="pt-4">
@@ -41,10 +42,10 @@ export default function AboutPage() {
             <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
               <Reveal>
                 <div className="lg:sticky lg:top-28">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#a6f04c]">
                     The short version
                   </p>
-                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-4 text-sm leading-relaxed text-[#9aa79a]">
                     Founded in 2019 by a designer and an engineer who were tired of handoff-shaped
                     projects.
                   </p>
@@ -53,33 +54,24 @@ export default function AboutPage() {
 
               <div className="space-y-8">
                 <Reveal>
-                  <p className="text-lg leading-relaxed text-foreground/90 sm:text-xl">
-                    Most software projects fail in the space between a good design file and working
-                    production code. We removed that space. Design and engineering sit in the same
-                    pair of hands, review each other&apos;s work in the browser, and ship every week.
+                  <p className="text-lg leading-relaxed text-[#dfe8df] sm:text-xl">
+                    Most software projects fail in the spaces between vendors: the planning studio
+                    that never ships, the build team with no positioning, the agency that runs ads
+                    for a product it has never opened. We removed those spaces. One team plans,
+                    builds, maintains, and markets.
                   </p>
                 </Reveal>
                 <Reveal delay={0.08}>
-                  <p className="text-[15px] leading-relaxed text-muted-foreground">
+                  <p className="text-[15px] leading-relaxed text-[#9aa79a]">
                     That means we take on fewer engagements than a typical agency. Two to three at a
-                    time, each with people who have shipped this kind of product before. The trade-off
-                    is deliberate: fewer projects, deeper involvement, better outcomes.
+                    time, each with people who have shipped this kind of product before. The
+                    trade-off is deliberate: fewer projects, deeper involvement, better outcomes.
                   </p>
                 </Reveal>
                 <Reveal delay={0.14}>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <MediaFrame
-                      src={media.galleryStudio.src}
-                      alt={media.galleryStudio.alt}
-                      aspect="aspect-[4/3]"
-                      sizes="(max-width: 768px) 100vw, 320px"
-                    />
-                    <MediaFrame
-                      src={media.galleryWorkspace.src}
-                      alt={media.galleryWorkspace.alt}
-                      aspect="aspect-[4/3]"
-                      sizes="(max-width: 768px) 100vw, 320px"
-                    />
+                    <ArtFrame pattern="mesh" label="The studio" variant={1} aspect="aspect-[4/3]" />
+                    <ArtFrame pattern="grid" label="Working process" variant={2} aspect="aspect-[4/3]" />
                   </div>
                 </Reveal>
               </div>
@@ -87,8 +79,9 @@ export default function AboutPage() {
           </Container>
         </Section>
 
-        <Section className="relative border-y border-border bg-surface/40">
-          <Aurora intensity="subtle" />
+        <Section className="relative border-y border-[rgba(166,240,76,0.1)]">
+          <Sunspot className="opacity-70" />
+          <GridBackdrop className="opacity-50" />
           <Container className="relative">
             <SectionHeading
               eyebrow="Principles"
@@ -98,13 +91,17 @@ export default function AboutPage() {
             <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2">
               {values.map((value, index) => (
                 <RevealItem key={value.title}>
-                  <div className="flex h-full gap-5 rounded-2xl border border-border bg-card/50 p-6">
-                    <span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, "0")}</span>
+                  <LimeSurface edge="top" className="flex h-full gap-5 p-6">
+                    <span className="font-mono text-xs text-[#a6f04c]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                     <div>
-                      <h3 className="text-base font-semibold tracking-tight">{value.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{value.body}</p>
+                      <h3 className="text-base font-semibold tracking-[-0.01em] text-[#f2f5ef]">
+                        {value.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-[#9aa79a]">{value.body}</p>
                     </div>
-                  </div>
+                  </LimeSurface>
                 </RevealItem>
               ))}
             </RevealGroup>
@@ -114,17 +111,38 @@ export default function AboutPage() {
         <Section>
           <Container>
             <SectionHeading
-              eyebrow="Timeline"
-              title="How the studio grew."
-              lede="Slowly, and on purpose."
+              eyebrow="What we cover"
+              title="Three pillars, one team."
+              lede="The same people move through planning, build, and marketing with you."
             />
+            <div className="mt-12 space-y-0">
+              {pillars.map((pillar, index) => (
+                <Reveal key={pillar.slug} delay={index * 0.06}>
+                  <div className="grid gap-3 border-t border-[rgba(166,240,76,0.12)] py-7 sm:grid-cols-[4rem_minmax(0,15rem)_minmax(0,1fr)] sm:gap-8">
+                    <span className="font-mono text-sm text-[#a6f04c]">{pillar.index}</span>
+                    <h3 className="text-base font-semibold tracking-[-0.01em] text-[#f2f5ef]">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-[#9aa79a]">{pillar.summary}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </Section>
+
+        <Section className="border-t border-[rgba(166,240,76,0.1)]">
+          <Container>
+            <SectionHeading eyebrow="Timeline" title="How the studio grew." lede="Slowly, and on purpose." />
             <ol className="mt-12 space-y-0">
               {milestones.map((item, index) => (
                 <Reveal key={item.year} delay={index * 0.06}>
-                  <li className="grid gap-3 border-t border-border py-7 first:border-t-0 sm:grid-cols-[6rem_minmax(0,16rem)_minmax(0,1fr)] sm:gap-8">
-                    <span className="font-mono text-sm text-primary">{item.year}</span>
-                    <h3 className="text-base font-semibold tracking-tight">{item.title}</h3>
-                    <p className="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                  <li className="grid gap-3 border-t border-[rgba(166,240,76,0.12)] py-7 first:border-t-0 sm:grid-cols-[5rem_minmax(0,16rem)_minmax(0,1fr)] sm:gap-8">
+                    <span className="font-mono text-sm text-[#a6f04c]">{item.year}</span>
+                    <h3 className="text-base font-semibold tracking-[-0.01em] text-[#f2f5ef]">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-[#9aa79a]">{item.body}</p>
                   </li>
                 </Reveal>
               ))}
@@ -132,39 +150,39 @@ export default function AboutPage() {
           </Container>
         </Section>
 
-        <Section className="border-t border-border">
+        <Section className="border-t border-[rgba(166,240,76,0.1)]">
           <Container>
             <SectionHeading
               eyebrow="The team"
               title="Six people, no bench."
-              lede="Sample profiles for this demo build. Every engagement is staffed by the founders and senior specialists."
+              lede="Every engagement is staffed by the founders and senior specialists. No one is learning on your budget."
             />
             <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {team.map((member) => (
                 <RevealItem key={member.name}>
-                  <div className="group h-full rounded-2xl border border-border bg-card/45 p-5 transition-colors hover:border-primary/25">
+                  <LimeSurface interactive className="h-full p-5">
                     <div
-                      className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${member.accent} font-mono text-sm font-semibold text-foreground ring-1 ring-inset ring-white/10`}
+                      className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${member.accent} font-mono text-sm font-semibold text-[#f2f5ef] ring-1 ring-inset ring-white/10`}
                       aria-hidden="true"
                     >
                       {member.initials}
                     </div>
-                    <h3 className="mt-4 text-[15px] font-semibold tracking-tight">{member.name}</h3>
-                    <p className="mt-0.5 text-xs text-primary">{member.role}</p>
-                    <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">{member.bio}</p>
-                    <p className="mt-4 border-t border-border pt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <h3 className="mt-4 text-[15px] font-semibold tracking-[-0.01em] text-[#f2f5ef]">
+                      {member.name}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-[#a6f04c]">{member.role}</p>
+                    <p className="mt-3 text-[13px] leading-relaxed text-[#9aa79a]">{member.bio}</p>
+                    <p className="mt-4 border-t border-[rgba(166,240,76,0.1)] pt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b776b]">
                       {member.focus}
                     </p>
-                  </div>
+                  </LimeSurface>
                 </RevealItem>
               ))}
             </RevealGroup>
 
             <Reveal delay={0.1}>
-              <div className="mt-12 flex flex-col items-start gap-4 rounded-2xl border border-border bg-card/50 p-6 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-muted-foreground">
-                  Want to see the work instead of the team page?
-                </p>
+              <div className="mt-12 flex flex-col items-start gap-4 rounded-2xl border border-[rgba(166,240,76,0.14)] bg-[rgba(10,14,10,0.6)] p-6 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-[#9aa79a]">Want to see the work instead of the team page?</p>
                 <div className="flex flex-wrap gap-2.5">
                   <Button asChild variant="outline">
                     <Link href="/work">

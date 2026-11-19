@@ -22,9 +22,9 @@ import {
 type Status = "idle" | "submitting" | "success" | "error";
 
 const PLAN_LABELS: Record<string, string> = {
-  sprint: "Design sprint",
-  build: "Product build",
-  partner: "Studio partner",
+  establish: "Establish sprint",
+  build: "Build engagement",
+  growth: "Growth partnership",
 };
 
 export function ContactForm() {
@@ -97,13 +97,15 @@ export function ContactForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         role="status"
-        className="flex h-full flex-col items-center justify-center rounded-2xl border border-emerald-500/25 bg-card/60 p-10 text-center"
+        className="flex h-full flex-col items-center justify-center rounded-2xl border border-[rgba(166,240,76,0.25)] bg-[rgba(10,14,10,0.75)] p-10 text-center"
       >
-        <span className="grid size-12 place-items-center rounded-full bg-emerald-500/12 text-emerald-500">
+        <span className="grid size-12 place-items-center rounded-full bg-[rgba(166,240,76,0.12)] text-[#a6f04c]">
           <CheckCircle2 className="size-6" />
         </span>
-        <h3 className="mt-5 text-xl font-semibold tracking-tight">Message received.</h3>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+        <h3 className="mt-5 text-xl font-semibold tracking-[-0.02em] text-[#f2f5ef]">
+          Message received.
+        </h3>
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#9aa79a]">
           Thanks — we read every enquiry ourselves and reply within two business days. If it is
           urgent, email us directly.
         </p>
@@ -124,14 +126,14 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-2xl border border-border bg-card/55 p-6 sm:p-7"
+      className="nl-surface p-6 sm:p-7"
     >
       {planLabel ? (
-        <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-primary/25 bg-primary/8 px-3.5 py-2.5">
-          <p className="text-[13px] text-foreground">
+        <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-[rgba(166,240,76,0.25)] bg-[rgba(166,240,76,0.07)] px-3.5 py-2.5">
+          <p className="text-[13px] text-[#f2f5ef]">
             Enquiring about <span className="font-medium">{planLabel}</span>
           </p>
-          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-primary">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#a6f04c]">
             Prefilled
           </span>
         </div>

@@ -15,17 +15,17 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-11 w-full items-center justify-between gap-2 rounded-lg border border-input bg-background/60 px-3.5 text-sm text-foreground shadow-sm transition-[border-color,box-shadow]",
-      "data-[placeholder]:text-muted-foreground/70",
-      "focus-visible:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30",
-      "aria-[invalid=true]:border-destructive",
+      "flex h-11 w-full items-center justify-between gap-2 rounded-lg border border-[rgba(166,240,76,0.14)] bg-black/40 px-3.5 text-sm text-[#f2f5ef] transition-[border-color,box-shadow]",
+      "data-[placeholder]:text-[#6b776b]",
+      "focus-visible:border-[rgba(166,240,76,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(166,240,76,0.18)]",
+      "aria-[invalid=true]:border-[#f2555a]",
       className,
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="size-4 text-muted-foreground" />
+      <ChevronDown className="size-4 text-[#6b776b]" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -40,7 +40,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "relative z-50 max-h-72 min-w-[8rem] overflow-hidden rounded-lg border border-border bg-popover text-popover-foreground shadow-xl",
+        "relative z-50 max-h-72 min-w-[8rem] overflow-hidden rounded-lg border border-[rgba(166,240,76,0.18)] bg-[#0b0f0b] text-[#f2f5ef] shadow-xl",
         position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className,
       )}
@@ -60,14 +60,14 @@ const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-pointer select-none items-center rounded-md py-2 pl-8 pr-3 text-sm outline-none transition-colors",
-      "focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "focus:bg-[rgba(166,240,76,0.1)] focus:text-[#f2f5ef] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
   >
     <span className="absolute left-2.5 flex size-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="size-3.5 text-primary" />
+        <Check className="size-3.5 text-[#a6f04c]" />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>

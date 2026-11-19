@@ -1,34 +1,58 @@
+"use client";
+
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
+import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 
 /**
- * Layered ambient background: soft radial gradients (no `filter: blur()`, which
- * is what made this expensive on mobile — large blurred layers get re-rastered
- * on every paint). Animation is disabled below 768px via CSS, so phones get a
- * static, GPU-cheap wash.
+ * The single light source of the site: a cone of lime falling from the top
+ * centre, exactly like the reference hero. Opacity and spread are driven by
+ * scroll progress over the parent section.
+ *
+ * Animates opacity/transform only (never `filter`), is mounted only on `md+`,
+ * and renders a static cone under reduced motion.
  */
-export function Aurora({
-  className,
-  intensity = "default",
-}: {
-  className?: string;
-  intensity?: "subtle" | "default" | "strong";
-}) {
-  const opacity =
-    intensity === "subtle" ? "opacity-40" : intensity === "strong" ? "opacity-100" : "opacity-70";
+export function SunlightCone({ className }: { className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.55, 1], [0.9, 0.5, 0]);
+  const scaleX = useTransform(scrollYProgress, [0, 1], [1, 1.3]);
+  const scaleY = useTransform(scrollYProgress, [0, 1], [1, 0.86]);
 
   return (
     <div
+      ref={ref}
       aria-hidden="true"
-      className={cn("pointer-events-none absolute inset-0 overflow-hidden", opacity, className)}
+      className={cn("pointer-events-none absolute inset-x-0 top-0 h-[46rem]", className)}
     >
-      <div className="absolute -left-[15%] -top-[30%] size-[38rem] animate-aurora rounded-full bg-[radial-gradient(circle_at_center,var(--violet),transparent_66%)] [animation-delay:-4s]" />
-      <div className="absolute -right-[18%] top-[-16%] size-[32rem] animate-aurora rounded-full bg-[radial-gradient(circle_at_center,var(--indigo),transparent_68%)] opacity-80 [animation-delay:-11s]" />
-      <div className="absolute -bottom-[35%] left-[22%] hidden size-[28rem] animate-aurora rounded-full bg-[radial-gradient(circle_at_center,var(--cyan),transparent_70%)] opacity-50 [animation-delay:-17s] sm:block" />
+      <div className="sunspot absolute inset-0" />
+      {reduced ? (
+        <div className="sunlight-cone absolute left-1/2 top-[-14rem] hidden h-[40rem] w-[64rem] -translate-x-1/2 opacity-60 md:block" />
+      ) : (
+        <motion.div
+          style={{ opacity, scaleX, scaleY }}
+          className="sunlight-cone absolute left-1/2 top-[-14rem] hidden h-[40rem] w-[64rem] origin-top -translate-x-1/2 md:block"
+        />
+      )}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(166,240,76,0.45)] to-transparent" />
     </div>
   );
 }
 
-/** CSS grid with a radial mask that fades the lines out from the center. */
+/** Static top-of-page light wash for inner page heroes and CTA panels. */
+export function Sunspot({ className }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={cn("sunspot pointer-events-none absolute inset-x-0 top-0 h-[28rem]", className)} />
+  );
+}
+
+/** CSS grid with a radial mask that fades the lines out from the centre. */
 export function GridBackdrop({
   className,
   size = 64,
@@ -59,10 +83,8 @@ const NOISE_TILE =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 /**
- * Film grain, rendered as a small tiled SVG (rasterized once, then repeated).
- * The previous version ran a full-viewport live turbulence filter, which was the
- * single most expensive thing on the page. Hidden below `md` and when the user
- * asks for reduced motion.
+ * Film grain as a small tiled SVG (rasterized once, then repeated) instead of
+ * a live full-viewport turbulence filter. Hidden below `md`.
  */
 export function NoiseOverlay() {
   return (
